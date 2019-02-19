@@ -1,0 +1,6 @@
+*.class
+*.cache
+*/target/*
+/target/*
+/target/
+**/target/*
