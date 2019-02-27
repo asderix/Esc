@@ -72,6 +72,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     NormalizedName(nameElementCombinations, fullName)
   }
 
+  // ---
   private def buildWhitespaceVariations(whitespaceSplit: Vector[String], mutWhitespaceCombinations: mutable.ArrayBuffer[mutable.ArrayBuffer[String]],
                                 counter: Int, length: Int): Unit = {
     val whitespaceCombination = mutable.ArrayBuffer.empty[String]
@@ -87,6 +88,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
       buildWhitespaceVariations(whitespaceSplit, mutWhitespaceCombinations, counter + 1, length)
   }
 
+  // ---
   private def buildPersonNameElementCombinations(whitespaceVariations: Vector[String],
                                          mutNameElementCombinations: mutable.ArrayBuffer[mutable.ArrayBuffer[(String, Double, Byte)]]): Unit = {
 
@@ -129,6 +131,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     })
   }
 
+  // ---
   private def buildOrganisationNameElementCombinations(whitespaceVariations: Vector[String],
                                                  mutNameElementCombinations: mutable.ArrayBuffer[mutable.ArrayBuffer[(String, Double, Byte)]]): Unit = {
 
@@ -176,12 +179,14 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     })
   }
 
+  // ---
   private def combineSubLists[T](list: List[List[T]]): List[List[T]] = list match {
     case Nil => Nil :: Nil
     case head :: tail => val rec = combineSubLists[T](tail)
       rec.flatMap(r => head.map(t => t :: r))
   }
 
+  // ---
   private def persNameElementReducedWeight(nameElement : String, initialWeight : Double) : Double = {
     var reducedWeight : Double = 1.0
     nameElement match {
@@ -215,6 +220,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     reducedWeight
   }
 
+  // ---
   private def firstNameElementReducedWeight(nameElement : String, initialWeight : Double) : Double = {
     var reducedWeight : Double = 1.0
     nameElement match {
@@ -241,6 +247,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     reducedWeight
   }
 
+  // ---
   private def orgNameElementReducedWeight(nameElement : String, initialWeight : Double) : Double = {
     var reducedWeight : Double = 1.0
     nameElement match {
@@ -296,6 +303,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     reducedWeight
   }
 
+  // ---
   private def getOrgNameElementTypeWeightNorm(nameElement : String, initWeight : Double) : (Byte, Double, String) = {
     nameElement.toDeLegalForm match {
       case (true, x: String) => return (2, similarityConfig.normOrgLegalformWeight, x)

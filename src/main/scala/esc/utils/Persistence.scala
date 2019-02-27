@@ -8,6 +8,9 @@ package esc.utils
 import spray.json._
 import DefaultJsonProtocol._
 
+/**
+  * Object providing methods for serialization and deserialization.
+  */
 object Persistence {
   implicit class NormalizedNameVectorSerializer(normalizedNameVector: Vector[Vector[(String, Double, Byte)]])
   {
@@ -27,4 +30,8 @@ object Persistence {
       */
     def toNormalizedNameVector : Vector[Vector[(String, Double, Byte)]] = normalizedNameVectorJson.parseJson.convertTo[Vector[Vector[(String, Double, Byte)]]]
   }
+
+  // Todo: Add persistence for country/country-vector
+  // Todo: Add persistence for date/date-vector
+
 }

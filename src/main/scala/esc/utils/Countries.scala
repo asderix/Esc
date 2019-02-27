@@ -34,6 +34,7 @@ object Countries {
     }
   }
 
+  // ---
   private val countries = Map(
               "ad" -> "ad", "andorra" -> "ad", "andorre" -> "ad", "principat d'andorra" -> "ad", "and" -> "ad",
               "ae" -> "ae", "vereinigte arabische emirate" -> "ae", "emirati arabi uniti" -> "ae", "united arab emirates" -> "ae", "emirats arabes unis" -> "ae", "are" -> "ae", "uae" -> "ae",
@@ -287,5 +288,6 @@ object Countries {
               "xk" -> "xk", "kosovo" -> "xk", "republik kosovo" -> "xk", "république du kosovo" -> "xk", "le kosovo" -> "xk", "il kosovo" -> "xk", "cossovo" -> "xk", "republic of kosovo" -> "xk", "kosova" -> "xk", "kosovë" -> "xk", "republika e kosovës" -> "xk", "republika kosovo" -> "xk"
   )
 
+  // ---
   private val countryList = countries.keys.toList
 }

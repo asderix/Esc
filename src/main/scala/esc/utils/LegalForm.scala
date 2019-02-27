@@ -5,6 +5,9 @@
 
 package esc.utils
 
+/**
+  * Object providing methods for check an normalizing legal forms.
+  */
 object LegalForm {
   implicit class LegalForm(nameElement : String) {
 
@@ -29,6 +32,7 @@ object LegalForm {
     }
   }
 
+  // ---
   private val legalForms = Map(
     "ag" -> "ag", "ab" -> "ag", "ad" -> "ag", "asa" -> "ag", "at" -> "ag", "bat" -> "ag", "bhd" -> "ag", "corp" -> "ag", "dd" -> "ag", "inc" -> "ag", "kk" -> "ag", "ltd" -> "ag", "lte" -> "ag", "nv" -> "ag", "nyrt" -> "ag", "oao" -> "ag", "oy" -> "ag", "pao" -> "ag", "pjsc" -> "ag", "plc" -> "ag", "pt" -> "ag", "rt" -> "ag", "sa" -> "ag", "sarf" -> "ag", "sas" -> "ag", "se" -> "ag", "sha" -> "ag", "spa" -> "ag", "ssk" -> "ag", "teo" -> "ag", "zrt" -> "ag", "lc" -> "ag", "ao" -> "ag", "limited" -> "ag", "cifingedig" -> "ag", "cif" -> "ag", "corporation" -> "ag", "aktiengesellschaft" -> "ag", "company" -> "ag",
     "ag_and_co_ohg" -> "ag_and_co_ohg",
@@ -46,6 +50,7 @@ object LegalForm {
     "uc" -> "uc"
   )
 
+  // ---
   private val legalFormList = legalForms.keys.toList
 
 }
