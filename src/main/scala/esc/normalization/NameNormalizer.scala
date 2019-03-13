@@ -12,7 +12,7 @@ import esc.commons._
 import scala.collection.mutable
 
 /**
-  * This class provide the most needed methods for normalizing names.
+  * This class provides the most needed methods for normalizing names.
   */
 class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityConfig()) {
 

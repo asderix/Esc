@@ -14,12 +14,19 @@ package esc.application
 import esc.commons.NormalizedName
 import esc.normalization._
 import esc.utils.Persistence._
+import esc.utils.BasicFunctions
+import esc.similarity._
+
+import java.security.MessageDigest
+import scala.math.{max,min}
 
 object EscApp extends App {
   println("")
-  println("######################################################")
-  println("# Hello from Esc!")
-  println("######################################################")
+  println("#################################################################################################################")
+  println("# Hello from ESC!                                                                                               #")
+  println("#################################################################################################################")
+  println("")
+
   /*
   println("# Type nnp [name] for person name normalization.")
   println("# Type nne [name] for entity name normalization.")
@@ -28,11 +35,10 @@ object EscApp extends App {
   println("# Type end. for exit.")
   println("######################################################")
   println("")
-  val action = scala.io.StdIn.readLine("> ")
-
   */
+
   println("")
   println("Press enter to exit.")
   val ending = scala.io.StdIn.readLine("> ")
-  
+
 }
