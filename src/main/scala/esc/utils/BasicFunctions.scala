@@ -19,12 +19,4 @@ object BasicFunctions {
     * Check whetever a string is null or empty (false) or not (true).
     */
   def isNullOrEmpty(x: String) = Option(x).forall(_.isEmpty)
-
-  /**
-    * Return the SHA-1 digest from two sorted and concated strings.
-    * as BigInt.
-    */
-  def getTextPairHash(textA: String, textB: String): BigInt = {
-    BigInt(_sha1MessageDigest.digest(Seq(textA, textB).sorted.mkString.getBytes("UTF-8")))
-  }
 }

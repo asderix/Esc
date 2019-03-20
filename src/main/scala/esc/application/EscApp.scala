@@ -41,4 +41,9 @@ object EscApp extends App {
   println("Press enter to exit.")
   val ending = scala.io.StdIn.readLine("> ")
 
+  //println(BasicFunctions.getTextPairHash("ronny", "ronald"))
+  //println(Seq("ronny", "ronald").sorted.mkString("."))
+
+  println("Sim: " + nameElementSimilarityDb.getKnownSimilarity("ronny", "ronald"))
+
 }
