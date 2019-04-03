@@ -1,6 +1,6 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.normalization
@@ -123,6 +123,11 @@ object TextNormalizer {
     mutNormNameElement = mutNormNameElement.replaceAll("vich-{1}", "vic-")
     mutNormNameElement = mutNormNameElement.replaceAll("off${1}", "ov")
     mutNormNameElement = mutNormNameElement.replaceAll("off-{1}", "ov-")
+
+    // Some standardizations in relation to the Chinese
+    mutNormNameElement = mutNormNameElement.replaceAll("-tao", "tao")
+
+    /*
     mutNormNameElement = mutNormNameElement.replaceAll("ew${1}", "ev")
     mutNormNameElement = mutNormNameElement.replaceAll("ew-{1}", "ev-")
     mutNormNameElement = mutNormNameElement.replaceAll("ow${1}", "ov")
@@ -133,6 +138,7 @@ object TextNormalizer {
     mutNormNameElement = mutNormNameElement.replaceAll("-iw{1}", "-iv")
     mutNormNameElement = mutNormNameElement.replaceAll("^wi{1}", "vi")
     mutNormNameElement = mutNormNameElement.replaceAll("-wi{1}", "-vi")
+    */
 
     mutNormNameElement
   }

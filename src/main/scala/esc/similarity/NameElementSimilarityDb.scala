@@ -1,21 +1,46 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.similarity
 
 import esc.utils.BasicFunctions
+import scala.collection.mutable
 
 /**
   * Object providing methods for known similarity name element pairs.
   */
 object nameElementSimilarityDb {
+
+    /**
+      * Return if a similarity is know or not and the similarity value.
+      * Similarity of a no knowing combination is -99.999.
+      */
     def getKnownSimilarity(nameElementA: String, nameElementB: String): (Boolean, Double) = {
         nameElementSimilarities.getOrElse(Seq(nameElementA, nameElementB).sorted.mkString("."), -99.999) match {
             case r if r == -99.999 => return (false, r)
             case r => return (true, r)
         }
+    }
+
+    /**
+      * Return a list with matching pairs. MatchLevel is equal or
+      * bigger value of similarity.
+      */
+    def getMatchList(matchLevel: Double): List[(String, String)] = {
+      var mutList = mutable.ListBuffer.empty[(String, String)]
+
+      for ((k,v) <- nameElementSimilarities) {
+        v match {
+          case s if s >= matchLevel => {
+            val arr = k.split(".")
+            mutList += ((arr(0), arr(1)))
+          }
+          case _ =>
+        }
+      }
+      mutList.toList
     }
 
     // ---
@@ -862,6 +887,7 @@ object nameElementSimilarityDb {
         "chin.jin" -> 0.99,
         "chin.kam" -> 0.99,
         "chin.kim" -> 0.99,
+        "chintao.jintao" -> 0.99,
         "chioh.jiang" -> 0.99,
         "chiu.hsiao" -> 0.99,
         "chiu.qiu" -> 0.99,
@@ -900,7 +926,7 @@ object nameElementSimilarityDb {
         "connan.cowan" -> 0.1,
         "connelly.connolly" -> 0.1,
         "connelly.donnelly" -> 0.1,
-        "connolly.konold" -> 0.1,
+        "connolly.conold" -> 0.1,
         "conte.conti" -> 0.1,
         "conti.corti" -> 0.1,
         "cu.phu" -> 0.1,
@@ -1064,6 +1090,7 @@ object nameElementSimilarityDb {
         "ella.eva" -> 0.1,
         "elmar.elmer" -> 0.95,
         "elmorabet.elmrabet" -> 0.1,
+        "elcin.jelzin" -> 0.91,
         "eltsine.jelzin" -> 0.91,
         "eltsinne.yeltsin" -> 0.91,
         "elvina.elwina" -> 0.99,
@@ -2315,6 +2342,7 @@ object nameElementSimilarityDb {
         "vallone.varone" -> 0.1,
         "vasiliev.wassiljew" -> 0.99,
         "viseu.wyser" -> 0.1,
+        "vladimir.wladimir" -> 0.99,
         "vodka.wodka" -> 0.91,
         "vogel.vogeli" -> 0.1,
         "vogele.vogeli" -> 0.1,

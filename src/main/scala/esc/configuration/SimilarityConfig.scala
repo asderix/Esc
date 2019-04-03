@@ -1,6 +1,6 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.configuration
@@ -8,7 +8,15 @@ package esc.configuration
 /**
   * Case class for the configuration of the similarity stuff.
   *
-  * At the moment only parameters are implemented which are also
-  * used for the normalization.
+  * normOrgLegalformWeight: Weight of a legal form match
+  * normOrgCountryWeight: Weight of a country match
+  * nameElementSimilarityForHit: Minimum similarity to mark as hit.
+  * matchSelectionMode:
+  * 0 = Similarity
+  * 1 = Number of hits (not weighted)
   */
-case class SimilarityConfig(normOrgLegalformWeight : Double = 0.5, normOrgCountryWeight : Double = 0.5)
+case class SimilarityConfig(normOrgLegalformWeight : Double = 0.25,
+                            normOrgCountryWeight : Double = 0.5,
+                            nameElementSimilarityForHit : Double = 0.9,
+                            matchSelectionMode : Int = 0
+                        )

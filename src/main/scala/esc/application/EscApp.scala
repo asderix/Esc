@@ -1,13 +1,7 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
-
-/**
-  * During the basic development this ist only for playing.
-  * Later it will comes to a simple command-line application
-  * for a direct usage of the library.
-*/
 
 package esc.application
 
@@ -27,23 +21,47 @@ object EscApp extends App {
   println("#################################################################################################################")
   println("")
 
-  /*
-  println("# Type nnp [name] for person name normalization.")
-  println("# Type nne [name] for entity name normalization.")
-  println("# Type dn [date] for date normalization.")
-  println("# Type cn [country name] for country normalization.")
-  println("# Type end. for exit.")
-  println("######################################################")
+  println("# Type -pnorm '[name]' for person name normalization")
+  println("# Type -onorm '[name]' for organisation name normalization")
+  println("# Type -pnm '[nameA]','[nameB]' for person name name-matching.")
+  println("# Type -onm '[nameA]','[nameB]' for organisation name name-matching.")
+  println("# Type exit for exit.")
   println("")
-  */
+  
+  val norm = new NameNormalizer
+  val sim = new NameSimilarity
 
-  println("")
-  println("Press enter to exit.")
-  val ending = scala.io.StdIn.readLine("> ")
+  var go : Boolean = true
+  while(go) {
+    val input = scala.io.StdIn.readLine("> ") 
+    if (input.contains("-pnorm ")) {
+      val cString = input.replace("-pnorm ", "")
+      println(norm.normalizePersonName(cString))
 
-  //println(BasicFunctions.getTextPairHash("ronny", "ronald"))
-  //println(Seq("ronny", "ronald").sorted.mkString("."))
+    }
 
-  println("Sim: " + nameElementSimilarityDb.getKnownSimilarity("ronny", "ronald"))
+    if (input.contains("-onorm ")) {
+      val cString = input.replace("-onorm ", "")
+      println(norm.normalizeOrganisationName(cString))
 
+    }
+
+    if (input.contains("-pnm ")) {
+      val cString = input.replace("-pnm ", "")
+      val names = cString.split(",")
+      println(sim.getPersonNameSimilarity(names(0), names(1)).toString)
+
+    }
+
+    if (input.contains("-onm ")) {
+      val cString = input.replace("-onm ", "")
+      val names = cString.split(",")
+      println(sim.getOrganisationNameSimilarity(names(0), names(1)).toString)
+    }
+
+    if (input == "exit") {
+      go = false
+      println("Bye bye ...")
+    }
+  }
 }

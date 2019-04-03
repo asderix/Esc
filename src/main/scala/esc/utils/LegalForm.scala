@@ -1,6 +1,6 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.utils
@@ -39,7 +39,7 @@ object LegalForm {
     "ag_and_co_ohg" -> "ag_and_co_ohg",
     "ag_and_co_kg" -> "ag_and_co_kg",
     "ag_and_co_kgaa" -> "ag_and_co_kgaa",
-    "gmbh" -> "gmbh", "aps" -> "gmbh", "ba" -> "gmbh", "bv" -> "gmbh", "doo" -> "gmbh", "kft" -> "gmbh", "lda" -> "gmbh", "llc" -> "gmbh", "ltd" -> "gmbh", "ltda" -> "gmbh", "ood" -> "gmbh", "ooo" -> "gmbh", "oy" -> "gmbh", "sarl" -> "gmbh", "sl" -> "gmbh", "sprl" -> "gmbh", "srl" -> "gmbh", "sro" -> "gmbh", "taa" -> "gmbh", "tob" -> "gmbh", "yk" -> "gmbh", "lc" -> "gmbh", "limited" -> "gmbh", "cifingedig" -> "gmbh", "cif" -> "gmbh",
+    "gmbh" -> "gmbh", "aps" -> "gmbh", "ba" -> "gmbh", "bv" -> "gmbh", "doo" -> "gmbh", "kft" -> "gmbh", "lda" -> "gmbh", "llc" -> "gmbh", "ltda" -> "gmbh", "ood" -> "gmbh", "ooo" -> "gmbh", "oy" -> "gmbh", "sarl" -> "gmbh", "sl" -> "gmbh", "sprl" -> "gmbh", "srl" -> "gmbh", "sro" -> "gmbh", "taa" -> "gmbh", "tob" -> "gmbh", "yk" -> "gmbh", "lc" -> "gmbh", "limited" -> "gmbh", "cifingedig" -> "gmbh", "cif" -> "gmbh",
     "gmbh_and_co_kg" -> "gmbh_and_co_kg",
     "gmbh_and_co_kgaa" -> "gmbh_and_co_kgaa",
     "gmbh_and_co_ohg" -> "gmbh_and_co_ohg", "gmbh_and_co_kg" -> "gmbh_and_co_ohg", "gmbh_and_co_kgaa" -> "gmbh_and_co_ohg",

@@ -1,6 +1,6 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * license:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.normalization
@@ -76,8 +76,19 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
   private def buildWhitespaceVariations(whitespaceSplit: Vector[String], mutWhitespaceCombinations: mutable.ArrayBuffer[mutable.ArrayBuffer[String]],
                                 counter: Int, length: Int): Unit = {
     val whitespaceCombination = mutable.ArrayBuffer.empty[String]
-    whitespaceSplit.zipWithIndex.foreach {
-      case e if e._2 == counter && counter + 1 < length => whitespaceCombination += e._1 + whitespaceSplit(e._2 + 1)
+    whitespaceSplit.zipWithIndex.foreach {      
+      case e if e._2 == counter && counter + 1 < length => {
+        (persNameElementReducedWeight(e._1, 1.0)._2, persNameElementReducedWeight(whitespaceSplit(e._2 + 1), 1.0)._2) match {
+          case (false, true) => whitespaceCombination += e._1
+          case _ => {            
+            (e._1.isCountry, whitespaceSplit(e._2 + 1).isCountry) match {
+              case (true, _) => whitespaceCombination += e._1
+              case (_, true) => whitespaceCombination += e._1
+              case _ => whitespaceCombination += e._1 + whitespaceSplit(e._2 + 1)
+            }            
+          }
+        }        
+      }
       case e if e._2 == counter + 1 =>
       case e => whitespaceCombination += e._1
     }
@@ -117,12 +128,12 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
       cl.foreach(e => {
         e.length match {
           case 1 =>
-            mutNameElement += ((e(0), persNameElementReducedWeight(e(0), 1.0), 1))
+            mutNameElement += ((e(0), persNameElementReducedWeight(e(0), 1.0)._1, 1))
           case _ =>
             e.zipWithIndex.foreach(he => {
               he._2 match {
-                case 0 => mutNameElement += ((he._1, firstNameElementReducedWeight(he._1, 1.0), 1))
-                case _ => mutNameElement += ((he._1, persNameElementReducedWeight(he._1, 1.0 / e.length), 1))
+                case 0 => mutNameElement += ((he._1, firstNameElementReducedWeight(he._1, 1.0), 1))                
+                case _ => mutNameElement += ((he._1, firstNameElementReducedWeight(he._1, 1.0 / e.length), 1))
               }
             })
         }
@@ -187,60 +198,63 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
   }
 
   // ---
-  private def persNameElementReducedWeight(nameElement : String, initialWeight : Double) : Double = {
+  private def persNameElementReducedWeight(nameElement : String, initialWeight : Double) : (Double, Boolean) = {
     var reducedWeight : Double = 1.0
+    var isReduced : Boolean = false
     nameElement match {
-      case "der" => reducedWeight = initialWeight - 0.5
-      case "von" => reducedWeight = initialWeight - 0.5
-      case "van" => reducedWeight = initialWeight - 0.5
-      case "del" => reducedWeight = initialWeight - 0.5
-      case "di" => reducedWeight = initialWeight - 0.5
-      case "de" => reducedWeight = initialWeight - 0.5
-      case "da" => reducedWeight = initialWeight - 0.5
-      case "zu" => reducedWeight = initialWeight - 0.5
-      case "zur" => reducedWeight = initialWeight - 0.5
-      case "ar" => reducedWeight = initialWeight - 0.5
-      case "al" => reducedWeight = initialWeight - 0.5
-      case "bin" => reducedWeight = initialWeight - 0.5
-      case "el" => reducedWeight = initialWeight - 0.8
-      case "abd" => reducedWeight = initialWeight - 0.5
-      case "abdel" => reducedWeight = initialWeight - 0.8
-      case "abdul" => reducedWeight = initialWeight - 0.5
-      case "vonder" => reducedWeight = initialWeight - 0.5
-      case "vonde" => reducedWeight = initialWeight - 0.5
-      case "vander" => reducedWeight = initialWeight - 0.5
-      case "vande" => reducedWeight = initialWeight - 0.5
-      case "dos" => reducedWeight = initialWeight - 0.5
-      case "dr" => reducedWeight = initialWeight - 0.4
-      case "prof" => reducedWeight = initialWeight - 0.4
+      case "der" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "von" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "van" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "del" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "di" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "de" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "da" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "zu" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "zur" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "ar" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "al" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "bin" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "el" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abd" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abdel" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abdul" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vonder" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vonde" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vander" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vande" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "dos" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "dr" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "prof" => reducedWeight = initialWeight - 0.8; isReduced = true
       case _ => reducedWeight = initialWeight
     }
 
     if(reducedWeight < 0) reducedWeight = 0.0
-    reducedWeight
+
+    (reducedWeight, isReduced)
   }
 
   // ---
   private def firstNameElementReducedWeight(nameElement : String, initialWeight : Double) : Double = {
     var reducedWeight : Double = 1.0
     nameElement match {
-      case "pierre" => reducedWeight = initialWeight - 0.5
-      case "yves" => reducedWeight = initialWeight - 0.5
-      case "sofia" => reducedWeight = initialWeight - 0.5
-      case "sofie" => reducedWeight = initialWeight - 0.5
-      case "sophia" => reducedWeight = initialWeight - 0.5
-      case "sophie" => reducedWeight = initialWeight - 0.5
-      case "karl" => reducedWeight = initialWeight - 0.5
-      case "carl" => reducedWeight = initialWeight - 0.5
-      case "hans" => reducedWeight = initialWeight - 0.5
-      case "jean" => reducedWeight = initialWeight - 0.5
-      case "ann" => reducedWeight = initialWeight - 0.5
-      case "anna" => reducedWeight = initialWeight - 0.5
-      case "anne" => reducedWeight = initialWeight - 0.5
-      case "klara" => reducedWeight = initialWeight - 0.5
-      case "mia" => reducedWeight = initialWeight - 0.5
-      case "marie" => reducedWeight = initialWeight - 0.5
-      case _ => reducedWeight = persNameElementReducedWeight(nameElement, initialWeight)
+      case "pierre" => reducedWeight = initialWeight - 0.40
+      case "peter" => reducedWeight = initialWeight - 0.40
+      case "yves" => reducedWeight = initialWeight - 0.40
+      case "sofia" => reducedWeight = initialWeight - 0.40
+      case "sofie" => reducedWeight = initialWeight - 0.40      
+      case "sophie" => reducedWeight = initialWeight - 0.40
+      case "karl" => reducedWeight = initialWeight - 0.40
+      case "carl" => reducedWeight = initialWeight - 0.40
+      case "hans" => reducedWeight = initialWeight - 0.40
+      case "jean" => reducedWeight = initialWeight - 0.40
+      case "ann" => reducedWeight = initialWeight - 0.40
+      case "anna" => reducedWeight = initialWeight - 0.40
+      case "anne" => reducedWeight = initialWeight - 0.40
+      case "klara" => reducedWeight = initialWeight - 0.40
+      case "mia" => reducedWeight = initialWeight - 0.40
+      case "marie" => reducedWeight = initialWeight - 0.40
+      case "claude" => reducedWeight = initialWeight - 0.40
+      case _ => reducedWeight = persNameElementReducedWeight(nameElement, initialWeight)._1
     }
 
     if(reducedWeight < 0) reducedWeight = 0

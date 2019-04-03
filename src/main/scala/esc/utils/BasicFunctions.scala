@@ -1,6 +1,6 @@
 /**
   * author:   Ronny Fuchs, info@asderix.com
-  * licence:  Apache license 2.0 - https://www.apache.org/licenses/
+  * licencs:  Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.utils
@@ -12,8 +12,6 @@ import java.security.MessageDigest
   * per object reference.
   */ 
 object BasicFunctions {
-  // ---
-  private val _sha1MessageDigest = MessageDigest.getInstance("SHA-1")
 
   /**
     * Check whetever a string is null or empty (false) or not (true).
