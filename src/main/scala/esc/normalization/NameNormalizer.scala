@@ -13,13 +13,17 @@ import scala.collection.mutable
 
 /**
   * This class provides the most needed methods for normalizing names.
+  *
+  * @param  similarityConfig  Optional. A SimilarityConfiguration.
   */
 class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityConfig()) {
 
   /**
     * This method normalize a person name.
-    * @param fullName String representing the full name of a person.
-    * @return
+    *
+    * @param fullName String representing the full name of a person, including middle- und maiden name(s) etc. Withoud title.
+    *
+    * @return Returns a NormalizedName object.
     */
   def normalizePersonName(fullName: String): NormalizedName = {
     require(fullName.length > 1)
@@ -46,8 +50,10 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
 
   /**
     * This method normalize an organisation name.
-    * @param fullName String representing a full organisation name.
-    * @return
+    *
+    * @param fullName String representing a full organisation name. Including the legal form.
+
+    * @return returns a NormalizedName object.
     */
   def normalizeOrganisationName(fullName: String): NormalizedName = {
     require(fullName.length > 1)
@@ -72,18 +78,63 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     NormalizedName(nameElementCombinations, fullName)
   }
 
+  /**
+    * Return if a name element is reduced (true/false) and the reduced value.
+    * Min. value is 0.
+    *
+    * @param  nameElement  A single name element, e.g. john.
+    * @param  initialWeight  The weight the name element have yet.
+    *
+    * @return Returns a Tuple with the new value and a Boolean if it was reduced.
+    */
+  def persNameElementReducedWeight(nameElement : String, initialWeight : Double) : (Double, Boolean) = {
+    var reducedWeight : Double = 1.0
+    var isReduced : Boolean = false
+    nameElement match {
+      case "der" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "von" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "van" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "del" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "di" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "de" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "da" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "zu" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "zur" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "ar" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "al" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "bin" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "el" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abd" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abdel" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "abdul" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vonder" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vonde" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vander" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "vande" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "dos" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "dr" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "prof" => reducedWeight = initialWeight - 0.8; isReduced = true
+      case _ => reducedWeight = initialWeight
+    }
+
+    if(reducedWeight < 0) reducedWeight = 0.0
+
+    (reducedWeight, isReduced)
+  }
+
   // ---
   private def buildWhitespaceVariations(whitespaceSplit: Vector[String], mutWhitespaceCombinations: mutable.ArrayBuffer[mutable.ArrayBuffer[String]],
                                 counter: Int, length: Int): Unit = {
     val whitespaceCombination = mutable.ArrayBuffer.empty[String]
+    var scip : Boolean = false
     whitespaceSplit.zipWithIndex.foreach {      
       case e if e._2 == counter && counter + 1 < length => {
         (persNameElementReducedWeight(e._1, 1.0)._2, persNameElementReducedWeight(whitespaceSplit(e._2 + 1), 1.0)._2) match {
-          case (false, true) => whitespaceCombination += e._1
+          case (false, true) => scip = true
           case _ => {            
             (e._1.isCountry, whitespaceSplit(e._2 + 1).isCountry) match {
-              case (true, _) => whitespaceCombination += e._1
-              case (_, true) => whitespaceCombination += e._1
+              case (true, _) => scip = true
+              case (_, true) => scip = true
               case _ => whitespaceCombination += e._1 + whitespaceSplit(e._2 + 1)
             }            
           }
@@ -92,7 +143,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
       case e if e._2 == counter + 1 =>
       case e => whitespaceCombination += e._1
     }
-
+    if (!scip)
     mutWhitespaceCombinations += whitespaceCombination
 
     if (counter + 1 < length)
@@ -195,42 +246,6 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
     case Nil => Nil :: Nil
     case head :: tail => val rec = combineSubLists[T](tail)
       rec.flatMap(r => head.map(t => t :: r))
-  }
-
-  // ---
-  private def persNameElementReducedWeight(nameElement : String, initialWeight : Double) : (Double, Boolean) = {
-    var reducedWeight : Double = 1.0
-    var isReduced : Boolean = false
-    nameElement match {
-      case "der" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "von" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "van" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "del" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "di" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "de" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "da" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "zu" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "zur" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "ar" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "al" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "bin" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "el" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "abd" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "abdel" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "abdul" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "vonder" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "vonde" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "vander" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "vande" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "dos" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "dr" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "prof" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case _ => reducedWeight = initialWeight
-    }
-
-    if(reducedWeight < 0) reducedWeight = 0.0
-
-    (reducedWeight, isReduced)
   }
 
   // ---

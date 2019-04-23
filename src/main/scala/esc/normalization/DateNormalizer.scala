@@ -15,9 +15,9 @@ import java.time.format.FormatStyle
 import java.util.Locale
 
 /**
-  * This class provides the most needed method for normalizing dates.
+  * This object provides the most needed method for normalizing dates.
   */
-class DateNormalizer() {
+object DateNormalizer {
   private val yyyyMMdds = raw"[0-9]{8}".r
   private val mMMMdyyyy = raw"[a-zA-Z]+ {1}\d{1,2},{1} {1}\d{4}".r
   private val ddMMyyyy = raw"[0-9]{2}.[0-9]{2}.[0-9]{4}".r
@@ -41,10 +41,11 @@ class DateNormalizer() {
     * - yyyy.MM.dd/yyyy.MM.d/yyyy.M.d/yyyy.M.dd = 2019.12.31
     * - yyyy.MM/yyyy.M = 2019.12
     * - yyyy = 2019
-    * All variants with dots (.) are also supported with hyphen (-)
-    * and slash (/) as seperator.
+    * All variants with dots (.) are also supported with hyphen (-) and slash (/) as seperator.
+    *
     * @param dateString The string representing the date
-    * @return
+    *
+    * @return a NormalizedDate object.
     */
   def normalizeDate(dateString : String) : NormalizedDate = {
     dateString match {

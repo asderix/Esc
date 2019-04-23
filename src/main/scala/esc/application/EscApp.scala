@@ -5,19 +5,26 @@
 
 package esc.application
 
-import esc.commons.NormalizedName
+import esc.commons._
 import esc.normalization._
 import esc.utils.Persistence._
 import esc.utils.BasicFunctions
 import esc.similarity._
+import esc.index._
 
 import java.security.MessageDigest
 import scala.math.{max,min}
 
+/**
+  * Main application class. Used for a very simple command line interface.
+  *
+  */
 object EscApp extends App {
   println("")
   println("#################################################################################################################")
   println("# Hello from ESC!                                                                                               #")
+  println("# Version: 1.0.0                                                                                                #")
+  println("# Project website: https://esc.asderix.com                                                                      #")
   println("#################################################################################################################")
   println("")
 

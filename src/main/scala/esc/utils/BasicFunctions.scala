@@ -5,8 +5,6 @@
 
 package esc.utils
 
-import java.security.MessageDigest
-
 /**
   * Object with some basics functions which are useful to have
   * per object reference.
@@ -14,7 +12,7 @@ import java.security.MessageDigest
 object BasicFunctions {
 
   /**
-    * Check whetever a string is null or empty (false) or not (true).
+    * Check whetever a string is null or empty (true) or not (false).
     */
-  def isNullOrEmpty(x: String) = Option(x).forall(_.isEmpty)
+  def isNullOrEmpty(s: String) = Option(s).forall(_.isEmpty)
 }

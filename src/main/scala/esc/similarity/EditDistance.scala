@@ -16,6 +16,11 @@ object EditDistance {
     /**
     * Returns a weighted normalized similarity value between 0 and 1.
     * 0 means no similarity, 1 is 100% similarity/exact match.
+    *
+    * @param  textA  Text a) for comparison.
+    * @param  textB  Text b) for comparison.
+    *
+    * @return Return the edit distance similarity (value between 0 and 1). 
     */
     def getEditDistanceSimilarity(textA: String, textB: String): Double = {
       val ed = getEditDistance(textA, textB)
@@ -65,6 +70,11 @@ object EditDistance {
       * a = Edit distance as integer (exmpl. 2)
       * b = The reduction value as double (exmpl. 0.5)
       * c = The netto/weighted edit distance as double, a-b (exampl. 1.5)
+      *
+      * @param  textA  Text a) for comparison.
+      * @param  textB  Text b) for comparison.
+      *
+      * @return Return a Tuple with the edit distande, reduction value an weighted edit distance.
       */
     def getEditDistance[A](textA: Iterable[A], textB: Iterable[A]): (Int, Double, Double) = {      
       var wr: Double = 0.0

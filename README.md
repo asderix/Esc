@@ -17,9 +17,8 @@
 
 ## Description
 A powerful name matching library that is easy to use. Built on the shoulders of giants.
-With a lot of passion and currently little time.
 
-The solution will support various name-matching problems. Examples are Spelling mistakes, different spellings,
+The solution supports various name-matching problems. Examples are Spelling mistakes, different spellings,
 translation and transcription differences, hyphenation and merging, order of name elements, missing name
 elements, known abbreviations, etc. These problems can all be solved by the solution.
 
@@ -30,7 +29,17 @@ The solution is optimized both for the comparison of natural persons and for the
 organizations.
 
 ## Status
-The library is still in its infancy and therefore cannot be used directly yet.
+The library is now available in the first version.
+
+## Project website
+The official project website is here: https://esc.asderix.com/
 
 ## Usage
-Application examples will follow as soon as the solution can be used.
+You find a start guide with examples on the project website: https://esc.asderix.com/start.html
+Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-0-0/
+
+## Get binary
+You can download a complete binary with all dependencies on the project website: https://esc.asderix.com/download.html
+
+## Bugs & features
+Please report bugs or missed features to: info@asderix.com.

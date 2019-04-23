@@ -13,12 +13,19 @@ import esc.normalization._
 /**
   * This class provides methods to calculate the similarity of two 
   * normalized names.
+  *
+  * @param  similarityConfig  Optional. A SimilarityConfiguration.
   */
 class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityConfig()) {
 
   /**
    * Standard method to calculate the simialrity of two person names.
    * It returns a Match object that provides various key figures to match.
+   *
+   * @param  nameA  Name a) as a full name.
+   * @param  nameB  Name b) as a full name.
+   *
+   * @return Retun a Match object with the relevant match key figures.
    */
   def getPersonNameSimilarity(nameA : String, nameB : String) : Match = {
     val normalizer = new NameNormalizer
@@ -28,6 +35,9 @@ class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityCon
   /**
    * Standard method to calculate the simialrity of two organisation names.
    * It returns a Match object that provides various key figures to match.
+   *
+   * @param  nameA  Name a) as a full name.
+   * @param  nameB  Name b) as a full name.
    */
   def getOrganisationNameSimilarity(nameA : String, nameB : String) : Match = {
     val normalizer = new NameNormalizer
@@ -39,6 +49,12 @@ class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityCon
    * It returns a Match object that provides various key figures to match.
    * Attention:
    * Make sure that you only compare the same name types (person or organization).
+   * Maybe it's better to use the specific method (person or organisation).
+   *
+   * @param  normNameA  NormalizedName a). 
+   * @param  normNameB  NormalizedName b).
+   *
+   * @return Return a Match object with the relevant key figures of the match.
    */
   def getNameSimilarity(normNameA : NormalizedName, normNameB : NormalizedName) : Match = {
     val mutMatchList = mutable.ListBuffer.empty[Match]

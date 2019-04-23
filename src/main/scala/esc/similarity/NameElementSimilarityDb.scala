@@ -6,6 +6,7 @@
 package esc.similarity
 
 import esc.utils.BasicFunctions
+import esc.configuration._
 import scala.collection.mutable
 
 /**
@@ -16,6 +17,11 @@ object nameElementSimilarityDb {
     /**
       * Return if a similarity is know or not and the similarity value.
       * Similarity of a no knowing combination is -99.999.
+      *
+      * @param  nameElementA  The name element a) for the comparison. Name element, e.g. john, not a full name.
+      * @param  nameElementB  The name element b) for the comparison. Name element, e.g. john, not a full name.
+      *
+      * @return Return a Tuple with Boolean if is the similarity known or not (true/false) and the similarity value. If not know, the value is -99.999.
       */
     def getKnownSimilarity(nameElementA: String, nameElementB: String): (Boolean, Double) = {
         nameElementSimilarities.getOrElse(Seq(nameElementA, nameElementB).sorted.mkString("."), -99.999) match {
@@ -25,25 +31,42 @@ object nameElementSimilarityDb {
     }
 
     /**
-      * Return a list with matching pairs. MatchLevel is equal or
-      * bigger value of similarity.
+      * Return a list with matching name elements for a given name element.
+      * MatchLevel is an equal or bigger value of similarity.
+      * For matchLevel it is recommended to use the value of
+      * SimilarityConfig.nameElementSimilarityForHit.
+      * This is also used as the default.
+      *
+      * @param  nameElement  The name element for which you asked for known hits.
+      * @param  matchLeven  The similarity value from which you speak from a hit. E.g. 0.9. Use the value from SimilarityConfig.nameElementSimilarityForHit for consistence.
+      *
+      * @return Return a list of String with found known machtes.
       */
-    def getMatchList(matchLevel: Double): List[(String, String)] = {
-      var mutList = mutable.ListBuffer.empty[(String, String)]
-
+    def getMatchList(nameElement : String, matchLevel : Double = new SimilarityConfig().nameElementSimilarityForHit) : List[String] = {      
+      var mutMatchPairs = mutable.ListBuffer.empty[(String, String)]
       for ((k,v) <- nameElementSimilarities) {
         v match {
           case s if s >= matchLevel => {
-            val arr = k.split(".")
-            mutList += ((arr(0), arr(1)))
+            val arr = k.split("\\.")            
+            mutMatchPairs += ((arr(0), arr(1)))
           }
           case _ =>
         }
       }
-      mutList.toList
+
+      val matchPairs = mutMatchPairs.toList
+      val filteredPairs1 = matchPairs.filter(_._1 == nameElement)
+      val filteredPairs2 = matchPairs.filter(_._2 == nameElement)
+      val filteredPairs = filteredPairs1 ++ filteredPairs2
+      filteredPairs.flatMap(t => List(t._1, t._2)).distinct      
     }
 
     // ---
+    // Be careful changing this map. Be sure that the part A before the dot (.) is sorted before the second after the dot (.).
+    // Further make sure that the elements are written like they are after the normalization.
+    // Good example: "abc.bcd" -> 0.99
+    // Bad example: "bcd.abc" -> 0.99
+    // The Order in the map itself doesn't matter. But it's recommended to keep the entries also sorted.
     private val nameElementSimilarities = Map(
         "aaron.aron" -> 0.99,
         "aart.hart" -> 0.1,

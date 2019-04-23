@@ -11,9 +11,10 @@ import java.util.Locale
 object TextNormalizer {
 
   /**
-    * Default normalize method. Most likely for person names.
-    * @param text The string, a full name, to normalize.
-    * @return
+    * Default normalize method.
+    *
+    * @param text The string, e.g. a full name, to normalize.
+    * @return Return the normalized String.
     */
   def normalize(text: String) : String = {
     val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
@@ -71,8 +72,9 @@ object TextNormalizer {
     * Special normalize method for organisation names. This method take care of some legal forms
     * with more than one word/name element. Example: GmbH & Co. KG. This method first call
     * normalize itself.
-    * @param text The string, full name, to normalize.
-    * @return
+    *
+    * @param text The string, e.g. a full name, to normalize.
+    * @return Return a normalized String.
     */
   def normalizeWithLegalForm(text : String) : String = {
     var mutNormString = normalize(text)
@@ -109,9 +111,10 @@ object TextNormalizer {
 
   /**
     * This method normalize a single name element - not a full name. Actually there are some normalizations
-    * for Russian names.
+    * for Russian and Chinese names.
+    *
     * @param nameElement String representing the name element.
-    * @return
+    * @return Return a normalized String.
     */
   def normalizeNameElement(nameElement : String) : String = {
     var mutNormNameElement = nameElement
@@ -126,19 +129,6 @@ object TextNormalizer {
 
     // Some standardizations in relation to the Chinese
     mutNormNameElement = mutNormNameElement.replaceAll("-tao", "tao")
-
-    /*
-    mutNormNameElement = mutNormNameElement.replaceAll("ew${1}", "ev")
-    mutNormNameElement = mutNormNameElement.replaceAll("ew-{1}", "ev-")
-    mutNormNameElement = mutNormNameElement.replaceAll("ow${1}", "ov")
-    mutNormNameElement = mutNormNameElement.replaceAll("ow-{1}", "ov-")
-    mutNormNameElement = mutNormNameElement.replaceAll("^wl{1}", "vl")
-    mutNormNameElement = mutNormNameElement.replaceAll("-wl{1}", "-vl")
-    mutNormNameElement = mutNormNameElement.replaceAll("^iw{1}", "iv")
-    mutNormNameElement = mutNormNameElement.replaceAll("-iw{1}", "-iv")
-    mutNormNameElement = mutNormNameElement.replaceAll("^wi{1}", "vi")
-    mutNormNameElement = mutNormNameElement.replaceAll("-wi{1}", "-vi")
-    */
 
     mutNormNameElement
   }
