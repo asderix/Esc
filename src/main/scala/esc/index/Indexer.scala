@@ -189,7 +189,7 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
           }
         }
       }
-      doc.add(new TextField("doc", nameDoc.mkString(" "), Field.Store.NO)) // NO      
+      doc.add(new TextField("doc", nameDoc.mkString(" "), Field.Store.NO))   
       doc.add(new StringField("json", jsonName, Field.Store.YES))
 
       val csList = countries.map(
@@ -198,8 +198,8 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
           case(false, x) => " "
         }).filter(_ != " ")
       csList.length match {
-        case 0 => doc.add(new TextField("cs", "xx", Field.Store.NO)) // NO
-        case _ => doc.add(new TextField("cs", csList.mkString(" "), Field.Store.YES)) // NO
+        case 0 => doc.add(new TextField("cs", "xx", Field.Store.NO))
+        case _ => doc.add(new TextField("cs", csList.mkString(" "), Field.Store.YES))
       }      
             
       val ysList = dates.map(y => {
@@ -209,8 +209,8 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
           case _ => nd.year.toString
         }}).filter(_ != " ")
       ysList.length match {
-        case 0 => doc.add(new TextField("ys", "9999", Field.Store.NO)) // NO
-        case _ => doc.add(new TextField("ys", ysList.mkString(" "), Field.Store.NO)) // NO
+        case 0 => doc.add(new TextField("ys", "9999", Field.Store.NO))
+        case _ => doc.add(new TextField("ys", ysList.mkString(" "), Field.Store.NO))
       }      
       
       doc.add(new StringField("l", label, Field.Store.YES)) 

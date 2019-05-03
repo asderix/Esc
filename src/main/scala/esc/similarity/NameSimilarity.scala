@@ -77,7 +77,18 @@ class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityCon
                 case (false) => {            
                   nameElementSimilarityDb.getKnownSimilarity(a, b) match {
                     case (true, v) => mutFile += ((a, b, v, List(aw, bw).sorted.head))
-                    case (false, _) => mutFile += ((a, b, EditDistance.getEditDistanceSimilarity(a, b), List(aw, bw).sorted.head))
+                    case (false, _) => {                      
+                      similarityConfig.allowOneLetterAbbreviation match {
+                        case (true) => {
+                          (a.length(), b.length()) match {
+                            case (1, _) => if (a(0) == b(0)) mutFile += ((a, b, 1.0, List(aw, bw).sorted.head))
+                            case (_, 1) => if (b(0) == a(0)) mutFile += ((a, b, 1.0, List(aw, bw).sorted.head))
+                            case _ => mutFile += ((a, b, EditDistance.getEditDistanceSimilarity(a, b), List(aw, bw).sorted.head))
+                          } 
+                        }
+                        case _ => mutFile += ((a, b, EditDistance.getEditDistanceSimilarity(a, b), List(aw, bw).sorted.head))
+                      }                                     
+                    }
                   }
                 }
               }

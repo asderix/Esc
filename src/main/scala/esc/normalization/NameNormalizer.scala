@@ -114,7 +114,12 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
       case "dos" => reducedWeight = initialWeight - 0.8; isReduced = true
       case "dr" => reducedWeight = initialWeight - 0.8; isReduced = true
       case "prof" => reducedWeight = initialWeight - 0.8; isReduced = true
-      case _ => reducedWeight = initialWeight
+      case _ => {
+        nameElement.length match {
+          case 1 => if (similarityConfig.allowOneLetterAbbreviation) reducedWeight = initialWeight - similarityConfig.oneLetterAbbreviationWeight; isReduced = true
+          case _ => reducedWeight = initialWeight
+        }
+      }
     }
 
     if(reducedWeight < 0) reducedWeight = 0.0
@@ -325,7 +330,12 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
       case "for" => reducedWeight = initialWeight - 0.8
       case "the" => reducedWeight = initialWeight - 0.8
       case "de" => reducedWeight = initialWeight - 0.8
-      case _ => reducedWeight = initialWeight
+      case _ => {
+        nameElement.length match {
+          case 1 => if (similarityConfig.allowOneLetterAbbreviation) reducedWeight = initialWeight - similarityConfig.oneLetterAbbreviationWeight
+          case _ => reducedWeight = initialWeight
+        }
+      }
     }
 
     if(reducedWeight < 0) reducedWeight = 0.0

@@ -8,12 +8,14 @@ package esc.testing
 import org.scalatest.FunSuite
 import esc.normalization._
 import esc.similarity._
+import esc.configuration._
 
 /**
   * Test-class for normalization tests.
   */    
  class SimilarityTest extends FunSuite {   
    val similarity = new NameSimilarity  
+   val similarity2 = new NameSimilarity(SimilarityConfig().copy(allowOneLetterAbbreviation = true))  
 
    // -- Person names -- //  
    test("Similarity.PersonName.1") {
@@ -57,6 +59,12 @@ import esc.similarity._
    }
    test("Similarity.PersonName.15") {
        assert(similarity.getPersonNameSimilarity("Wladimir jewtuschenkow", "Vladimir yevtushenkov").similarity > 0.99)
+   }
+   test("Similarity.PersonName.16") {
+       assert(similarity.getPersonNameSimilarity("Heinrich B. Vonhuben", "Heinrich Benno Vonhuben").similarity < 0.95)
+   }
+   test("Similarity.PersonName.17") {
+       assert(similarity2.getPersonNameSimilarity("Heinrich B. Vonhuben", "Heinrich Benno Vonhuben").similarity > 0.99)
    }
 
    // -- Organisation names -- //
