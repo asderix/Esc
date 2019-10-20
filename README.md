@@ -29,14 +29,14 @@ The solution is optimized both for the comparison of natural persons and for the
 organizations.
 
 ## Status
-The library is now available in the first version.
+The library is available in the stable version 1.0.1.
 
 ## Project website
 The official project website is here: https://esc.asderix.com/
 
 ## Usage
 You find a start guide with examples on the project website: https://esc.asderix.com/start.html
-Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-0-0/
+Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-0-1/
 
 ## Get binary
 You can download a complete binary with all dependencies on the project website: https://esc.asderix.com/download.html

@@ -63,6 +63,21 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
     }
 
     /**
+      * Method to search a person using a lucene query string for the name part.
+      *
+      * @param  nameQuery  The lucene query string for searching the name.
+      * @param  datesOfBirth  A list with known dates of birth. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
+      *
+      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
+      */
+    def findPersonByIR(nameQuery : String, datesOfBirth : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
+        // Implementation here.
+
+    }
+
+    /**
       * Method to find an organisation by name with countries and dates of founding as filter. Optional
       * you can use label as an additional filter (if is indexed).
       * 
@@ -77,6 +92,21 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
         val normName = nameNormalizer.normalizeOrganisationName(fullName)
         val query = createNmQuery(normName, datesOfFounding, countries, Constants.IndexOrganisationNameTypeCode, label)        
         searchNmQuery(query, normName)
+    }
+
+    /**
+      * Method to find an organisation by lucene query string.
+      * 
+      * @param  nameQuery  The lucene query string for searching the name part.
+      * @param  datesOfFounding  A list with known dates of founding. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. Most likeley the domicile(s). ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
+      *
+      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
+      */
+    def findOrganisationByIR(nameQuery : String, datesOfFounding : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
+        // Implementation.
+
     }
 
     // ---
