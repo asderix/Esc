@@ -5,13 +5,13 @@
 
 package esc.testing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import esc.similarity._
 
 /**
   * Test-class for edit distance tests.
   */    
- class EditDistanceTest extends FunSuite {
+ class EditDistanceTest extends AnyFunSuite {
    test("EditDistance.Same.1") {          
      assert(EditDistance.getEditDistanceSimilarity("Mustermann", "Mustermann") == 1.0)
    }

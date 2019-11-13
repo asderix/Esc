@@ -33,7 +33,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
 
     whitespaceSplit.length match {
       case x if x > 2 => buildWhitespaceVariations(whitespaceSplit, mutWhitespaceVariations, 0, whitespaceSplit.length)
-      case _ => mutWhitespaceVariations += whitespaceSplit.to[mutable.ArrayBuffer]
+      case _ => mutWhitespaceVariations += whitespaceSplit.to(mutable.ArrayBuffer)
     }
 
     val whitespaceVariations = mutWhitespaceVariations.map(_.toVector).toVector
@@ -63,7 +63,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
 
     whitespaceSplit.length match {
       case x if x > 2 => buildWhitespaceVariations(whitespaceSplit, mutWhitespaceVariations, 0, whitespaceSplit.length)
-      case _ => mutWhitespaceVariations += whitespaceSplit.to[mutable.ArrayBuffer]
+      case _ => mutWhitespaceVariations += whitespaceSplit.to(mutable.ArrayBuffer)
     }
 
     val whitespaceVariations = mutWhitespaceVariations.map(_.toVector).toVector

@@ -6,6 +6,7 @@
 package esc.similarity
 
 import scala.math.{max,min, abs}
+import scala.language.postfixOps
 
 /**
   * this object provides useful methods using the edit distance as

@@ -33,7 +33,7 @@ class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityCon
   }
 
   /**
-   * Standard method to calculate the simialrity of two organisation names.
+   * Standard method to calculate the similarity of two organisation names.
    * It returns a Match object that provides various key figures to match.
    *
    * @param  nameA  Name a) as a full name.
@@ -45,7 +45,7 @@ class NameSimilarity(val similarityConfig : SimilarityConfig = new SimilarityCon
   }
 
   /**
-   * Main method to calculate the simialrity of two normalized names.
+   * Main method to calculate the similarity of two normalized names.
    * It returns a Match object that provides various key figures to match.
    * Attention:
    * Make sure that you only compare the same name types (person or organization).

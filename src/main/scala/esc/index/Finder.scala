@@ -74,6 +74,7 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
       */
     def findPersonByIR(nameQuery : String, datesOfBirth : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
         // Implementation here.
+        List[FinderMatch]() 
 
     }
 
@@ -106,7 +107,7 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
       */
     def findOrganisationByIR(nameQuery : String, datesOfFounding : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
         // Implementation.
-
+        List[FinderMatch]() 
     }
 
     // ---

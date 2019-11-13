@@ -5,7 +5,7 @@
 
 package esc.testing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import esc.similarity._
 import esc.index._
 import esc.commons._
@@ -14,7 +14,7 @@ import java.nio.file._
 /**
   * Test-class for the index operations (index & search).
   */    
- class IndexTest extends FunSuite {
+ class IndexTest extends AnyFunSuite {
      val path = Files.createTempDirectory("EscTest");     
 
      test("Indexer.IndexPerson.1") {     

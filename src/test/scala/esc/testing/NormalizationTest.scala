@@ -5,13 +5,13 @@
 
 package esc.testing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import esc.normalization._
 
 /**
   * Test-class for normalization tests.
   */    
- class NormalizationTest extends FunSuite {
+ class NormalizationTest extends AnyFunSuite {
    // -- Names -- //
    test("Normalization.PersonName.1") {
        val normalizer = new NameNormalizer    

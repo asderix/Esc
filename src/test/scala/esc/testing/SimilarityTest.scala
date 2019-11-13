@@ -5,7 +5,7 @@
 
 package esc.testing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import esc.normalization._
 import esc.similarity._
 import esc.configuration._
@@ -13,7 +13,7 @@ import esc.configuration._
 /**
   * Test-class for normalization tests.
   */    
- class SimilarityTest extends FunSuite {   
+ class SimilarityTest extends AnyFunSuite {   
    val similarity = new NameSimilarity  
    val similarity2 = new NameSimilarity(SimilarityConfig().copy(allowOneLetterAbbreviation = true))  
 
