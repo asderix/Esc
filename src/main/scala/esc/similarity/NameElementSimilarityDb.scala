@@ -38,9 +38,9 @@ object nameElementSimilarityDb {
       * This is also used as the default.
       *
       * @param  nameElement  The name element for which you asked for known hits.
-      * @param  matchLeven  The similarity value from which you speak from a hit. E.g. 0.9. Use the value from SimilarityConfig.nameElementSimilarityForHit for consistence.
+      * @param  matchLevel  The similarity value from which you speak from a hit. E.g. 0.9. Use the value from SimilarityConfig.nameElementSimilarityForHit for consistence.
       *
-      * @return Return a list of String with found known machtes.
+      * @return Return a list of String with found known matches.
       */
     def getMatchList(nameElement : String, matchLevel : Double = new SimilarityConfig().nameElementSimilarityForHit) : List[String] = {      
       var mutMatchPairs = mutable.ListBuffer.empty[(String, String)]
@@ -1069,6 +1069,7 @@ object nameElementSimilarityDb {
         "eckert.ewert" -> 0.1,
         "eckhart.ekehart" -> 0.99,
         "ed.edward" -> 0.97,
+        "eda.edah" -> 0.99,
         "edelgard.elgard" -> 0.99,
         "edelhard.ehlert" -> 0.99,
         "edi.edit" -> 0.97,
@@ -1140,6 +1141,7 @@ object nameElementSimilarityDb {
         "erich.erik" -> 0.99,
         "erik.erika" -> 0.1,
         "ersov.jerschow" -> 0.99,
+        "esa.esah" -> 0.99,
         "esposito.esposto" -> 0.1,
         "esra.ezra" -> 0.99,
         "esra.ezra" -> 0.99,
@@ -1999,6 +2001,8 @@ object nameElementSimilarityDb {
         "mayer.saier" -> 0.1,
         "mayor.meier" -> 0.1,
         "mayor.meier" -> 0.1,
+        "medvedev.medwedew" -> 0.99,
+        "medvedev.medwedjew" -> 0.99,
         "medwedew.medwedjew" -> 0.99,
         "meier.meiers" -> 0.1,
         "meier.saier" -> 0.1,

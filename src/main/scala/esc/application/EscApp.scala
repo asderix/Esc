@@ -23,7 +23,7 @@ object EscApp extends App {
   println("")
   println("#################################################################################################################")
   println("# Hello from ESC!                                                                                               #")
-  println("# Version: 1.1.0                                                                                                #")
+  println("# Version: 1.0.3                                                                                                #")
   println("# Project website: https://esc.asderix.com                                                                      #")
   println("#################################################################################################################")
   println("")

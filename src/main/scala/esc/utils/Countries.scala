@@ -36,6 +36,7 @@ object Countries {
 
   // ---
   private val countries = Map(
+              "ac" -> "ac", "ascension" -> "ac", "asc" -> "ac",
               "ad" -> "ad", "andorra" -> "ad", "andorre" -> "ad", "principat d'andorra" -> "ad", "and" -> "ad",
               "ae" -> "ae", "vereinigte arabische emirate" -> "ae", "emirati arabi uniti" -> "ae", "united arab emirates" -> "ae", "emirats arabes unis" -> "ae", "are" -> "ae", "uae" -> "ae",
               "af" -> "af", "afghanistan" -> "af", "afg" -> "af",
@@ -179,7 +180,7 @@ object Countries {
               "mf" -> "mf", "saint-martin" -> "mf", "saint martin (french part)" -> "mf", "maf" -> "mf",
               "mg" -> "mg", "madagaskar" -> "mg", "madagascar" -> "mg", "mdg" -> "mg", "mad" -> "mg",
               "mh" -> "mh", "marshallinseln" -> "mh", "isole marshall" -> "mh", "marshall islands" -> "mh", "marshall" -> "mh", "iles marshall" -> "mh", "mhl" -> "mh",
-              "mk" -> "mk", "mazedonien" -> "mk", "repubblica di macedonia" -> "mk", "macedonia" -> "mk", "the former yugoslav republic of macedonia" -> "mk", "macedoine" -> "mk", "mkd" -> "mk",
+              "mk" -> "mk", "nordmazedonien" -> "mk", "repubblica di macedonia" -> "mk", "macedonia" -> "mk", "the former yugoslav republic of macedonia" -> "mk", "macedoine" -> "mk", "mkd" -> "mk",
               "ml" -> "ml", "mali" -> "ml", "republique du mali" -> "ml", "mli" -> "ml", "466" -> "ml",
               "mm" -> "mm", "myanmar" -> "mm", "birmania" -> "mm", "birmanie" -> "mm", "burma" -> "mm", "mmr" -> "mm", "mya" -> "mm",
               "mn" -> "mn", "mongolei" -> "mn", "mongolia" -> "mn", "mongolie" -> "mn", "mongol uls" -> "mn", "mng" -> "mn", "mgl" -> "mn",

@@ -23,6 +23,8 @@ import java.nio.file._
         indexer.commit()
         indexer.close()
         val finder = IndexFactory.openIndexForSearch(path.toFile().getAbsolutePath(), "TestIndex")
+        assert(finder.getDocCount() > 0)
+        assert(finder.getLoadTime() != null)
         assert(finder.findPerson("Muster Hans", List("1979"), List("Schweiz")).size > 0)
         assert(finder.findPerson("Muster Hans", List("1990"), List()).size == 0)
      }

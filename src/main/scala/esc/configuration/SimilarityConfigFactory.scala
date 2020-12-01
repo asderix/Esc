@@ -6,7 +6,7 @@
 package esc.configuration
 
 /**
-  * Sugar object for creating SimilarityConfig using Java.
+  * Sugar object for creating SimilarityConfig when using Java.
   * For using Scala "new SimilarityConfig()" is exactly the same.
   */
 object SimilarityConfigFactory {    

@@ -33,6 +33,8 @@ import org.apache.lucene.queryparser.classic._
 import org.apache.lucene.analysis._
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer
+import java.util.Calendar
+import java.util.Date
 
 /**
   * Class that provides the necessary functions to find individuals and organizations.
@@ -44,6 +46,7 @@ import org.apache.lucene.analysis.core.WhitespaceAnalyzer
 class Finder(val indexSearcher : IndexSearcher, val similarityConfig : SimilarityConfig = new SimilarityConfig()) {
     val nameNormalizer = new NameNormalizer(similarityConfig)
     val nameSimilarity = new NameSimilarity(similarityConfig)
+    val loadTimestamp = Calendar.getInstance().getTime()
 
     /**
       * Method to find a person by name with countries and dates of birth as filter. Optional
@@ -108,6 +111,20 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
     def findOrganisationByIR(nameQuery : String, datesOfFounding : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
         // Implementation.
         List[FinderMatch]() 
+    }
+
+    /** 
+      * Return the Date on which the object was created.
+      */
+    def getLoadTime() : Date = {
+        this.loadTimestamp
+    }
+
+    /**
+      * Return the number of documents in the index.
+      */
+    def getDocCount() : Int = {
+        this.indexSearcher.getIndexReader().numDocs()
     }
 
     // ---
