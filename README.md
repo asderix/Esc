@@ -39,7 +39,7 @@ You find a start guide with examples on the project website: https://esc.asderix
 Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-0-3/
 
 ## Get binary
-You can download a complete binary with all dependencies on the project website: https://esc.asderix.com/download.html
+Alternatively to the release (complete binary with all dependencies) on Github, the binary can also be downloaded on the project website: https://esc.asderix.com/download.html
 
 ## Bugs & features
 Please report bugs or missed features to: info@asderix.com.
