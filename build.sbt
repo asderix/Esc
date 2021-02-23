@@ -6,14 +6,14 @@ ThisBuild / homepage := Some(url("https://esc.asderix.com/"))
 ThisBuild / developers := List(
   Developer("ronnyfuchs", "Ronny Fuchs", "info@asderix.com", url("http://esc.asderix.com"))
 )
-ThisBuild / scalaVersion := "2.13.1"
+ThisBuild / scalaVersion := "2.13.5"
 
 lazy val Esc = (project in file("."))
   .settings(
     name := "EntitySimilarityChecker",    
-    libraryDependencies += "io.spray" %%  "spray-json" % "1.3.5",
+    libraryDependencies += "io.spray" %%  "spray-json" % "1.3.6",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.0-M1" % "test",
-    libraryDependencies += "org.apache.lucene" % "lucene-core" % "8.3.0",
-    libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "8.3.0",
-    libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "8.3.0"
+    libraryDependencies += "org.apache.lucene" % "lucene-core" % "8.8.0",
+    libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "8.8.0",
+    libraryDependencies += "org.apache.lucene" % "lucene-analyzers-common" % "8.8.0"
   )
