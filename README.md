@@ -32,7 +32,7 @@ organizations.
 The library is available in the stable version 1.0.3.
 
 ## Project website
-The official project website is here: https://esc.asderix.com/
+The official project website is here: https://esc.asderix.com/ - Roadmap and release notes are on GitHub-Wiki.
 
 ## Usage
 You find a start guide with examples on the project website: https://esc.asderix.com/start.html
