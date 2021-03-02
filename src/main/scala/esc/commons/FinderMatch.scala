@@ -7,10 +7,10 @@ package esc.commons
 
 /**
  * Class that provides the match information of a Finder result.
- * @param  id  The id of the found person.
- * @param  externalId  The external id of the found person.
- * @param  foundName  The original name of the found person.
- * @param  matchResult  The matchResult object of the match.
+ * @param  id  The id of the found person or organisation.
+ * @param  externalId  The external id of the found person or organisation.
+ * @param  foundName  The original name of the found person or organisation.
+ * @param  matchResult  The MatchResult object of the match itself.
  */
 case class FinderMatch(id: String,
                        externalId : String,

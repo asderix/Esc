@@ -13,11 +13,11 @@ package esc.configuration
   * @param  normOrgLegalformWeight  Weight (reduction) of a legal form match (recommended: < 1, default is 0.25).
   * @param  normOrgCountryWeight  Weight (reduction) of a country match (recommended: < 1, default is 0.5).
   * @param  nameElementSimilarityForHit  Minimum similarity to mark as hit. Default is 0.9.
-  * @param  matchSelectionMode  Method of how a match is to be determined: 0 = Based on simialrity. 1 = Based on nofHits (number of hits). Default is 0.
-  * @param  checkDateForSearchHit  Defines whether the date should be taken into account. Default is true.
+  * @param  matchSelectionMode  Method of how a match has to be determined: 0 = Based on simialrity. 1 = Based on nofHits (number of hits). Default is 0.
+  * @param  checkDateForSearchHit  Defines whether the date should be taken into account or not. Default is true.
   * @param  DateComparisonMethod  Method which date parts are to be compared. Currently only 0 = year is supported. Default is 0.
   * @param  maxDateYearDifferenceForHit  Defines the uncertainty/tolerance in the annual comparison in number of years (+/-). Default is 2.
-  * @param  checkCountryForSearchHit  Defines whether the country should be considered. Default is true.
+  * @param  checkCountryForSearchHit  Defines whether the country should be considered or not. Default is true.
   * @param  similarityValueForSearchHit  Value of the similarity from which the comparison is classified as a hit. Default is 0.9.
   * @param  numberOfHitsForSearchHit  Value of the nofHits (number of hits) from which the comparison is classified as a hit. Default is 2.
   * @param  maxNumberOfCandidatesFromSearch  Defines the maximum number of candidates to be considered by the IR search, from which hits are then determined. Default is 10000

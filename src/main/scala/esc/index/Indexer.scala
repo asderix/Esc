@@ -26,8 +26,8 @@ import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.util.Version._
 
 /**
-  * Class that provides the necessary functions to index individuals and organizations.
-  * As a help you can create an instance of the class using the IndexFactory.
+  * Class that provides the necessary functions to index individuals and organisations.
+  * As a help you can create an instance of the class using the IndexFactory (recommended).
   *
   * @param  indexWriter  Lucene IndexWriter.
   * @param  similarityConfig  Optional. A SimilarityConfiguration.
@@ -144,7 +144,7 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
     /**
       * Removes a person from the index.
       *
-      * @param  personId  The id of the person. The IndexPerson.id attribute when added.
+      * @param  personId  The id of the person (the IndexPerson.id attribute when added).
       */
     def removePerson(personId : String) : Boolean = {
       indexWriter.deleteDocuments(new Term("id", personId))
@@ -155,7 +155,7 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
     /**
       * Removes an organisation from the index.
       *
-      * @param  organisationId  The id of the organisation. The IndexOrganisation.id attribute when added.
+      * @param  organisationId  The id of the organisation (the IndexOrganisation.id attribute when added).
       */
     def removeOrganisation(organisationId : String) : Boolean = {
       indexWriter.deleteDocuments(new Term("id", organisationId))
@@ -170,7 +170,8 @@ class Indexer(val indexWriter : IndexWriter, val similarityConfig : SimilarityCo
 
       doc.add(new StringField("id", id, Field.Store.YES))
       doc.add(new StringField("exid", externalId, Field.Store.YES))      
-      doc.add(new StringField("name", fullName, Field.Store.YES))  
+      doc.add(new StringField("name", fullName, Field.Store.YES))
+      doc.add(new TextField("ir", fullName, Field.Store.NO))  
 
       var nameDoc = mutable.ListBuffer.empty[String]
       for (variant <- normalizedName.normNames) {

@@ -13,6 +13,8 @@ import esc.normalization._
   */    
  class NormalizationTest extends AnyFunSuite {
    // -- Names -- //
+   val normalizer = new NameNormalizer
+   println(normalizer.normalizePersonName("Muster Hans").normNames.toString)
    test("Normalization.PersonName.1") {
        val normalizer = new NameNormalizer    
      assert(normalizer.normalizePersonName("RÒnald Möhler-Møller").normNames.toString == "Vector(Vector((ronald,1.0,1), (mohlermoller,1.0,1)), Vector((ronald,1.0,1), (mohler,1.0,1), (moller,0.5,1)))")

@@ -31,7 +31,7 @@ object Persistence {
     def toNormalizedNameVector : Vector[Vector[(String, Double, Byte)]] = normalizedNameVectorJson.parseJson.convertTo[Vector[Vector[(String, Double, Byte)]]]
   }
 
-  // Todo: Add persistence for country/country-vector
-  // Todo: Add persistence for date/date-vector
+  // Todo: Add persistence for country/country-vector?
+  // Todo: Add persistence for date/date-vector?
 
 }

@@ -21,7 +21,7 @@ class NameNormalizer(val similarityConfig : SimilarityConfig = new SimilarityCon
   /**
     * This method normalize a person name.
     *
-    * @param fullName String representing the full name of a person, including middle- und maiden name(s) etc. Withoud title.
+    * @param fullName String representing the full name of a person, including middle- und maiden name(s) etc. Without title.
     *
     * @return Returns a NormalizedName object.
     */

@@ -16,14 +16,14 @@ import java.security.MessageDigest
 import scala.math.{max,min}
 
 /**
-  * Main application class. Used for a very simple command line interface.
+  * Main application class. Used for a very simple command line interface (CLI).
   *
   */
 object EscApp extends App {
   println("")
   println("#################################################################################################################")
   println("# Hello from ESC!                                                                                               #")
-  println("# Version: 1.0.3                                                                                                #")
+  println("# Version: 1.1.0                                                                                                #")
   println("# Project website: https://esc.asderix.com                                                                      #")
   println("#################################################################################################################")
   println("")

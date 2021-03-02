@@ -30,6 +30,8 @@ import org.apache.lucene.index.Term
 import org.apache.lucene.util.Version._
 import org.apache.lucene.search._
 import org.apache.lucene.queryparser.classic._
+import org.apache.lucene.queryparser.flexible.standard._
+import org.apache.lucene.queryparser.simple.SimpleQueryParser
 import org.apache.lucene.analysis._
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer
@@ -37,8 +39,8 @@ import java.util.Calendar
 import java.util.Date
 
 /**
-  * Class that provides the necessary functions to find individuals and organizations.
-  * As a help you can create an instance of the class using the IndexFactory.
+  * Class that provides the necessary functions to find individuals and organisations.
+  * As a help you can create an instance of the class using the IndexFactory (recommended).
   *
   * @param  indexSearcher  Lucene IndexSearcher.
   * @param  similarityConfig  Optional.Similarity configuration.
@@ -54,7 +56,7 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
       *
       * @param  fullName  The full name of the person, e.g. with middle- or maiden namen. But without title etc.
       * @param  datesOfBirth  A list with known dates of birth. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
-      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2, ISO-3 codes or names in en, de, fr and it (not recommended) are supported. Must not be null, empty list is allowed.
       * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
       *
       * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
@@ -68,17 +70,16 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
     /**
       * Method to search a person using a lucene query string for the name part.
       *
-      * @param  nameQuery  The lucene query string for searching the name.
+      * @param  nameQuery  The lucene query string for searching the name (*,+, -).
       * @param  datesOfBirth  A list with known dates of birth. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
-      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2, ISO-3 codes or names in en, de, fr and it (not recommended) are supported. Must not be null, empty list is allowed.
       * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
       *
-      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
+      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned. information: No similarity value is provided with this method.
       */
     def findPersonByIR(nameQuery : String, datesOfBirth : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
-        // Implementation here.
-        List[FinderMatch]() 
-
+        val query = createIrQuery(nameQuery, datesOfBirth, countries, Constants.IndexPersonNameTypeCode, label)        
+        searchIrQuery(query)
     }
 
     /**
@@ -87,7 +88,7 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
       * 
       * @param  fullName  The full name of the organisation, incl. the legal form.
       * @param  datesOfFounding  A list with known dates of founding. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
-      * @param  countries  A list with known countries. Most likeley the domicile(s). ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2, ISO-3 codes or names in en, de, fr and it (not recommended) are supported. Must not be null, empty list is allowed.
       * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
       *
       * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
@@ -101,27 +102,27 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
     /**
       * Method to find an organisation by lucene query string.
       * 
-      * @param  nameQuery  The lucene query string for searching the name part.
+      * @param  nameQuery  The lucene query string for searching the name part (*, +, -).
       * @param  datesOfFounding  A list with known dates of founding. See DataNormalizer for supported string formats. Must not be null, empty list is allowed.
-      * @param  countries  A list with known countries. Most likeley the domicile(s). ISO-2 codes an names in en, de, fr and it are supported. Must not be null, empty list is allowed.
+      * @param  countries  A list with known countries. E.g. domicile, citizenship, country of birth etc. ISO-2, ISO-3 codes or names in en, de, fr and it (not recommended) are supported. Must not be null, empty list is allowed.
       * @param  label  Optional. You can provide a label as search filter - if you have used them for indexing.
       *
-      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned.
+      * @return Returns a list of FinderMatch with the match details. If no matches are found an empty list is returned. Information: No similarity value is provided with this method.
       */
-    def findOrganisationByIR(nameQuery : String, datesOfFounding : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {
-        // Implementation.
-        List[FinderMatch]() 
+    def findOrganisationByIR(nameQuery : String, datesOfFounding : List[String], countries : List[String], label : String = "") : List[FinderMatch] = {        
+        val query = createIrQuery(nameQuery, datesOfFounding, countries, Constants.IndexOrganisationNameTypeCode, label)        
+        searchIrQuery(query)
     }
 
     /** 
-      * Return the Date on which the object was created.
+      * Return the Date on which the object was created. Equivalent to the loading time of the index data.
       */
     def getLoadTime() : Date = {
         this.loadTimestamp
     }
 
     /**
-      * Return the number of documents in the index.
+      * Return the number of documents in the index (persons and organisations).
       */
     def getDocCount() : Int = {
         this.indexSearcher.getIndexReader().numDocs()
@@ -177,6 +178,29 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
         }            
 
         mutListResult.toList
+    }
+
+    // ---
+    private def searchIrQuery(booleanQuery : BooleanQuery) : List[FinderMatch] = {
+        val hits = indexSearcher.search(booleanQuery, similarityConfig.maxNumberOfCandidatesFromSearch);
+
+        if (hits.totalHits.value < 1)
+            return List[FinderMatch]()            
+
+        val mutAllMatches = mutable.ListBuffer.empty[FinderMatch]
+        for (scoreDoc <- hits.scoreDocs) {
+            val doc = indexSearcher.doc(scoreDoc.doc)                                                  
+            val id = doc.get("id")
+            val exid = doc.get("exid")
+            val name = doc.get("name")        
+            val grpId = similarityConfig.searchEntityGroupMode match {
+                case 1 => id
+                case _ => exid
+            }
+            mutAllMatches += (FinderMatch(id, exid, name, Match(0, 0.0, 0.0, 0.0, 0.0, List())))                  
+        }   
+
+        mutAllMatches.toList
     }
 
     // ---
@@ -255,6 +279,56 @@ class Finder(val indexSearcher : IndexSearcher, val similarityConfig : Similarit
         if (!BasicFunctions.isNullOrEmpty(label))
             findQuery.add(new TermQuery(new Term("l", label)), BooleanClause.Occur.MUST)
 
+        findQuery.build()
+    }
+
+    // ---
+    private def createIrQuery(queryString : String, dates : List[String], countries : List[String], nameType : String, label : String) : BooleanQuery = {
+        BooleanQuery.setMaxClauseCount(Int.MaxValue)           
+        
+        val csList = "cs:xx" :: countries.map(
+        c => TextNormalizer.normalize(c).toIsoCountry match {
+          case(true, x) => "cs:" + x
+          case(false, x) => "_"
+        }).filter(_ != "_")
+        
+        val ysList = dates.map(y => {
+        val nd = DateNormalizer.normalizeDate(y)
+        nd.dateType match {
+          case 99 => 9999
+          case _ => nd.year
+        }}).filter(_ != 9999).sorted
+
+        var mutWithDate : Boolean = true
+        var mutDateBuilder = new mutable.StringBuilder
+        ysList.length match {
+            case 0 => mutWithDate = false
+            case _ => {
+                mutDateBuilder ++= "((ys:["
+                mutDateBuilder ++= (ysList.head - similarityConfig.maxDateYearDifferenceForHit).toString
+                mutDateBuilder ++= " TO "
+                mutDateBuilder ++= (ysList.last + similarityConfig.maxDateYearDifferenceForHit).toString
+                mutDateBuilder ++= "]) OR ys:9999)"
+            }
+        }
+                
+        val nameQuery = new SimpleQueryParser(new WhitespaceAnalyzer(), "ir");        
+
+        val findQuery = new BooleanQuery.Builder()
+        findQuery.add(new TermQuery(new Term("t", nameType)), BooleanClause.Occur.MUST)
+        findQuery.add(nameQuery.parse(queryString.toLowerCase), BooleanClause.Occur.MUST)
+
+        val queryParser = new QueryParser("doc", new PerFieldAnalyzerWrapper(new WhitespaceAnalyzer()))
+
+        if (csList.length > 1)
+            findQuery.add(queryParser.parse(csList.mkString(" ")), BooleanClause.Occur.MUST)
+
+        if (mutWithDate)
+            findQuery.add(queryParser.parse(mutDateBuilder.toString), BooleanClause.Occur.MUST)
+
+        if (!BasicFunctions.isNullOrEmpty(label))
+            findQuery.add(new TermQuery(new Term("l", label)), BooleanClause.Occur.MUST)
+        
         findQuery.build()
     }
 }
