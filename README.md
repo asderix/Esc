@@ -29,7 +29,7 @@ The solution is optimized both for the comparison of natural persons and for the
 organizations.
 
 ## Status
-The library is available in the stable version 1.0.3.
+The library is available in the stable version 1.0.4.
 
 ## Project website
 The official project website is here: https://esc.asderix.com/ - Roadmap and release notes are on GitHub-Wiki.
