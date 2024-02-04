@@ -36,7 +36,7 @@ The official project website is here: https://esc.asderix.com/ - Roadmap and rel
 
 ## Usage
 You find a start guide with examples on the project website: https://esc.asderix.com/start.html
-Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-0-6/
+Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/1-1-0/
 
 ## Get binary
 Alternatively to the release (complete binary with all dependencies) on Github, the binary can also be downloaded on the project website: https://esc.asderix.com/download.html
