@@ -1,4 +1,4 @@
-ThisBuild / description := "ESC is an easy to us entity similarity checker library with a powerful name matching algorithm."
+ThisBuild / description := "ESC is an easy to use entity similarity checker library with a powerful name matching algorithm."
 ThisBuild / licenses := Seq("Apache 2.0" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / organization := "R&F Works GmbH"
 ThisBuild / organizationHomepage := Some(url("https://www.r8f.ch/"))

@@ -249,7 +249,7 @@ object Countries {
               "sv" -> "sv", "el salvador" -> "sv", "salvador" -> "sv", "republica de el salvador" -> "sv", "slv" -> "sv", "esa" -> "sv",
               "sx" -> "sx", "sint maarten" -> "sx", "sint maarten" -> "sx", "sint maarten (dutch part)" -> "sx", "saint-martin (partie neerlandaise)" -> "sx", "sxm" -> "sx",
               "sy" -> "sy", "syrien" -> "sy", "siria" -> "sy", "syrian arab republic" -> "sy", "syrian" -> "sy", "syrie" -> "sy", "syrienne" -> "sy", "syr" -> "sy",
-              "sz" -> "sz", "swasiland" -> "sz", "swaziland" -> "sz", "umbuso swatini" -> "sz", "swz" -> "sz",
+              "sz" -> "sz", "swasiland" -> "sz", "swaziland" -> "sz", "umbuso swatini" -> "sz", "swz" -> "sz", "eswatini" -> "sz", "weswatini" -> "sz",
               "tc" -> "tc", "turks- und caicosinseln" -> "tc", "turks e caicos" -> "tc", "turks and caicos islands" -> "tc", "iles turks et caiques" -> "tc", "turks & caicos islands" -> "tc", "tca" -> "tc",
               "td" -> "td", "tschad" -> "td", "ciad" -> "td", "chad" -> "td", "tchad" -> "td", "jumhuriyat tshad" -> "td", "tcd" -> "td", "cha" -> "td",
               "tf" -> "tf", "französische süd- und antarktisgebiete" -> "tf", "terre australi e antartiche francesi" -> "tf", "french southern territories" -> "tf", "terres australes francaises" -> "tf", "atf" -> "tf",
@@ -269,7 +269,7 @@ object Countries {
               "ua" -> "ua", "ukraine" -> "ua", "ucraina" -> "ua",  "ukraine" -> "ua", "ukr" -> "ua",
               "ug" -> "ug", "uganda" -> "ug", "ouganda" -> "ug", "jamhuri ya uganda" -> "ug", "uga" -> "ug",
               "um" -> "um", "united states minor outlying islands" -> "um", "isole minori degli stati uniti" -> "um", "united states minor outlying islands" -> "um", "iles mineueres eloignees de etwa-unis" -> "um", "umi" -> "um",
-              "us" -> "us", "vereinigte staaten von amerika" -> "us", "amerika" -> "us", "stati uniti d'america" -> "us", "united states" -> "us", "etats-unis" -> "us", "usa" -> "us",
+              "us" -> "us", "vereinigte staaten von amerika" -> "us", "amerika" -> "us", "stati uniti d'america" -> "us", "united states" -> "us", "etats-unis" -> "us", "usa" -> "us", "america" -> "us",
               "uy" -> "uy", "uruguay" -> "uy", "repeblica oriental del uruguay" -> "uy", "ury" -> "uy", "uru" -> "uy",
               "uz" -> "uz", "usbekistan" -> "uz", "uzbekistan" -> "uz", "ouzbekistan" -> "uz", "o'zbekiston respublikasi" -> "uz", "uzb" -> "uz",
               "va" -> "va", "vatikanstadt" -> "va", "citta del vaticano" -> "va", "holy see" -> "va", "vatican city state" -> "va", "saint-siege" -> "va", "vat" -> "va",
@@ -286,7 +286,7 @@ object Countries {
               "za" -> "za", "südafrika" -> "za", "sudafrica" -> "za", "south africa" -> "za", "afrique du sud" -> "za", "afrika-borwa" -> "za", "zaf" -> "za", "rsa" -> "za", "sudafrika" -> "za",
               "zm" -> "zm", "sambia" -> "zm", "zambia" -> "zm", "zambie" -> "zm", "zmb" -> "zm",  "zam" -> "zm",
               "zw" -> "zw", "simbabwe" -> "zw", "zimbabwe" -> "zw", "zwe" -> "zw",  "zim" -> "zw",
-              "xk" -> "xk", "kosovo" -> "xk", "republik kosovo" -> "xk", "république du kosovo" -> "xk", "le kosovo" -> "xk", "il kosovo" -> "xk", "cossovo" -> "xk", "republic of kosovo" -> "xk", "kosova" -> "xk", "kosovë" -> "xk", "republika e kosovës" -> "xk", "republika kosovo" -> "xk"
+              "xk" -> "xk", "kosovo" -> "xk", "republik kosovo" -> "xk", "république du kosovo" -> "xk", "le kosovo" -> "xk", "il kosovo" -> "xk", "cossovo" -> "xk", "republic of kosovo" -> "xk", "kosova" -> "xk", "kosovë" -> "xk", "republika e kosovës" -> "xk", "republika kosovo" -> "xk", "kosove" -> "xk"
   )
 
   // ---

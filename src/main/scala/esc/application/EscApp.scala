@@ -1,6 +1,5 @@
-/**
-  * author:   Ronny Fuchs, info@asderix.com
-  * license:  Apache license 2.0 - https://www.apache.org/licenses/
+/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
+  * https://www.apache.org/licenses/
   */
 
 package esc.application
@@ -13,34 +12,44 @@ import esc.similarity._
 import esc.index._
 
 import java.security.MessageDigest
-import scala.math.{max,min}
+import scala.math.{max, min}
 
-/**
-  * Main application class. Used for a very simple command line interface (CLI).
-  *
+/** Main application class. Used for a very simple command line interface (CLI).
   */
 object EscApp extends App {
   println("")
-  println("#################################################################################################################")
-  println("# Hello from ESC!                                                                                               #")
-  println("# Version: 1.0.5                                                                                                #")
-  println("# Project website: https://esc.asderix.com                                                                      #")
-  println("#################################################################################################################")
+  println(
+    "#################################################################################################################"
+  )
+  println(
+    "# Hello from ESC!                                                                                               #"
+  )
+  println(
+    "# Version: 1.1.0                                                                                                #"
+  )
+  println(
+    "# Project website: https://esc.asderix.com                                                                      #"
+  )
+  println(
+    "#################################################################################################################"
+  )
   println("")
 
   println("# Type -pnorm '[name]' for person name normalization")
   println("# Type -onorm '[name]' for organisation name normalization")
   println("# Type -pnm '[nameA]','[nameB]' for person name name-matching.")
-  println("# Type -onm '[nameA]','[nameB]' for organisation name name-matching.")
+  println(
+    "# Type -onm '[nameA]','[nameB]' for organisation name name-matching."
+  )
   println("# Type exit for exit.")
   println("")
-  
+
   val norm = new NameNormalizer
   val sim = new NameSimilarity
 
-  var go : Boolean = true
-  while(go) {
-    val input = scala.io.StdIn.readLine("> ") 
+  var go: Boolean = true
+  while (go) {
+    val input = scala.io.StdIn.readLine("> ")
     if (input.contains("-pnorm ")) {
       val cString = input.replace("-pnorm ", "")
       println(norm.normalizePersonName(cString))

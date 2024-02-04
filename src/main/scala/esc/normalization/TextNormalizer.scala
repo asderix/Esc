@@ -1,6 +1,5 @@
-/**
-  * author:   Ronny Fuchs, info@asderix.com
-  * license:  Apache license 2.0 - https://www.apache.org/licenses/
+/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
+  * https://www.apache.org/licenses/
   */
 
 package esc.normalization
@@ -10,13 +9,14 @@ import java.util.Locale
 
 object TextNormalizer {
 
-  /**
-    * Default normalize method.
+  /** Default normalize method.
     *
-    * @param text The string, e.g. a full name, to normalize.
-    * @return Return the normalized String.
+    * @param text
+    *   The string, e.g. a full name, to normalize.
+    * @return
+    *   Return the normalized String.
     */
-  def normalize(text: String) : String = {
+  def normalize(text: String): String = {
     val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
     var mutNormString = text.toLowerCase(Locale.ENGLISH)
 
@@ -61,28 +61,34 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll("^de *la ", "dela ")
 
     // Normalized in NFD form (decomposition), in lower case letters
-    mutNormString = Normalizer.normalize(mutNormString, Normalizer.Form.NFD).toLowerCase(Locale.ENGLISH).trim
+    mutNormString = Normalizer
+      .normalize(mutNormString, Normalizer.Form.NFD)
+      .toLowerCase(Locale.ENGLISH)
+      .trim
 
     // Only standard Latin letters and numbers, hyphens and spaces
-    mutNormString = regexPattern replaceAllIn(mutNormString, "")
+    mutNormString = regexPattern replaceAllIn (mutNormString, "")
     mutNormString
   }
 
-  /**
-    * Special normalize method for organisation names. This method take care of some legal forms
-    * with more than one word/name element. Example: GmbH & Co. KG. This method first call
-    * normalize itself.
+  /** Special normalize method for organisation names. This method take care of
+    * some legal forms with more than one word/name element. Example: GmbH & Co.
+    * KG. This method first call normalize itself.
     *
-    * @param text The string, e.g. a full name, to normalize.
-    * @return Return a normalized String.
+    * @param text
+    *   The string, e.g. a full name, to normalize.
+    * @return
+    *   Return a normalized String.
     */
-  def normalizeWithLegalForm(text : String) : String = {
+  def normalizeWithLegalForm(text: String): String = {
     var mutNormString = normalize(text)
 
     // Compact common legal forms
     mutNormString = mutNormString.replace("gmbh *and *co *kg", "gmbh_and_co_kg")
-    mutNormString = mutNormString.replace("gmbh *and *co *ohg", "gmbh_and_co_ohg")
-    mutNormString = mutNormString.replace("gmbh *and *co *kgaa", "gmbh_and_co_kgaa")
+    mutNormString =
+      mutNormString.replace("gmbh *and *co *ohg", "gmbh_and_co_ohg")
+    mutNormString =
+      mutNormString.replace("gmbh *and *co *kgaa", "gmbh_and_co_kgaa")
 
     mutNormString = mutNormString.replace("ohg *mbh", "ohg_mbh")
 
@@ -90,11 +96,14 @@ object TextNormalizer {
     mutNormString = mutNormString.replace("ag *and *co *kgaa", "ag_and_co_kgaa")
     mutNormString = mutNormString.replace("ag *and *co *kg", "ag_and_co_kg")
 
-    mutNormString = mutNormString.replace("stiftung *and *co *kgaa", "stiftung_and_co_gkaa")
+    mutNormString =
+      mutNormString.replace("stiftung *and *co *kgaa", "stiftung_and_co_gkaa")
 
     mutNormString = mutNormString.replace("co-operativ", "cooperativ")
-    mutNormString = mutNormString.replace("societe *cooperative", "societe_cooperative")
-    mutNormString = mutNormString.replace("societa *cooperativa", "societa_cooperativa")
+    mutNormString =
+      mutNormString.replace("societe *cooperative", "societe_cooperative")
+    mutNormString =
+      mutNormString.replace("societa *cooperativa", "societa_cooperativa")
 
     mutNormString = mutNormString.replace("company *limited", "lc")
     mutNormString = mutNormString.replace("company *ltd", "lc")
@@ -109,14 +118,15 @@ object TextNormalizer {
     mutNormString
   }
 
-  /**
-    * This method normalize a single name element - not a full name. Actually there are some normalizations
-    * for Russian and Chinese names.
+  /** This method normalize a single name element - not a full name. Actually
+    * there are some normalizations for Russian and Chinese names.
     *
-    * @param nameElement String representing the name element.
-    * @return Return a normalized String.
+    * @param nameElement
+    *   String representing the name element.
+    * @return
+    *   Return a normalized String.
     */
-  def normalizeNameElement(nameElement : String) : String = {
+  def normalizeNameElement(nameElement: String): String = {
     var mutNormNameElement = nameElement
 
     // Some standardizations in relation to the Russian
