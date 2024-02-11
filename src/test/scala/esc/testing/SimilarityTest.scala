@@ -1,6 +1,7 @@
-/**
-  * author:   Ronny Fuchs, info@asderix.com
-  * license:  Apache license 2.0 - https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.testing
@@ -82,6 +83,9 @@ import esc.configuration._
     }
     test("Similarity.OrgName.5") {
         assert(similarity.getOrganisationNameSimilarity("Huber Holding AG", "Miller Holding AG").similarity < 0.70)
+    }
+    test("Similarity.OrgName.6") {
+        assert(similarity.getOrganisationNameSimilarity("Pharma Discounter AG", "pharmaceutical Discounter AG").similarity > 0.90)
     }
  }
 

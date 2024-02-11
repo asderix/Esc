@@ -1,5 +1,7 @@
-/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
-  * https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.application
@@ -25,7 +27,7 @@ object EscApp extends App {
     "# Hello from ESC!                                                                                               #"
   )
   println(
-    "# Version: 1.1.0                                                                                                #"
+    "# Version: 2.0.0                                                                                                #"
   )
   println(
     "# Project website: https://esc.asderix.com                                                                      #"

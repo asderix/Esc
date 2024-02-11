@@ -1,5 +1,7 @@
-/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
-  * https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.index
@@ -61,7 +63,7 @@ class Finder(
   val nameSimilarity = new NameSimilarity(similarityConfig)
   val addressNormalizer =
     new AddressNormalizer(similarityConfig, adrCheckStopWords, adrCheckHitWords)
-  val loadTimestamp = Calendar.getInstance().getTime()
+  val loadTimestamp: Date = Calendar.getInstance().getTime()
 
   /** Method to find a person by name with countries and dates of birth as
     * filter. Optional you can use label as an additional filter (if is

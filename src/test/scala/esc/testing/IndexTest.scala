@@ -1,5 +1,7 @@
-/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
-  * https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.testing
@@ -14,7 +16,7 @@ import java.nio.file._
 /** Test-class for the index operations (index & search).
   */
 class IndexTest extends AnyFunSuite {
-  val path = Files.createTempDirectory("EscTest");
+  val path: Path = Files.createTempDirectory("EscTest");
 
   test("Indexer.IndexPerson.1") {
     val indexer = IndexFactory.openOrCreateIndex(

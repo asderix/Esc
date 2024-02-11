@@ -1,11 +1,12 @@
-/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
-  * https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
 
 package esc.utils
 
-import spray.json._
-import DefaultJsonProtocol._
+import upickle.default._
 
 /** Object providing methods for serialization and deserialization.
   */
@@ -18,7 +19,7 @@ object Persistence {
       * @return
       *   Json.
       */
-    def toCompactJson: String = normalizedNameVector.toJson.compactPrint
+    def toCompactJson: String = upickle.default.write(normalizedNameVector)
   }
 
   implicit class NormalizedNameVectorDeserializer(
@@ -32,11 +33,7 @@ object Persistence {
       *   normalizedNameVector.
       */
     def toNormalizedNameVector: Vector[Vector[(String, Double, Byte)]] =
-      normalizedNameVectorJson.parseJson
-        .convertTo[Vector[Vector[(String, Double, Byte)]]]
+      upickle.default
+        .read[Vector[Vector[(String, Double, Byte)]]](normalizedNameVectorJson)
   }
-
-  // Todo: Add persistence for country/country-vector?
-  // Todo: Add persistence for date/date-vector?
-
 }

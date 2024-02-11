@@ -1,7 +1,8 @@
-/** author: Ronny Fuchs, info@asderix.com license: Apache license 2.0 -
-  * https://www.apache.org/licenses/
+/** @author:
+  *   Ronny Fuchs, info@asderix.com
+  * @license:
+  *   Apache license 2.0 - https://www.apache.org/licenses/
   */
-
 package esc.normalization
 
 import esc.configuration._
