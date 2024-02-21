@@ -556,10 +556,16 @@ class Finder(
     val wordQuery = new QueryParser("ir", new WhitespaceAnalyzer())
     val addressQueryBuilder = new BooleanQuery.Builder()
     for (e <- addressItems) {
-      addressQueryBuilder.add(
-        wordQuery.parse(s"$e~${similarityConfig.fuzzyScoreForAddressSearch}"),
-        BooleanClause.Occur.SHOULD
-      )
+      for (
+        xe <- List(List(e), nameElementSimilarityDb.getMatchList(e)).flatten.distinct
+      ) {
+        addressQueryBuilder.add(
+          wordQuery.parse(
+            s"$xe~${similarityConfig.fuzzyScoreForAddressSearch}"
+          ),
+          BooleanClause.Occur.SHOULD
+        )
+      }
     }
     val addressQuery = addressQueryBuilder
       .setMinimumNumberShouldMatch(

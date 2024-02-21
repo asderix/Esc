@@ -78,7 +78,13 @@ class Indexer(
         normalizedName.normNames.toCompactJson,
         Constants.IndexPersonNameTypeCode,
         person.datesOfBirth,
-        person.countries,
+        person.countries
+          .map(c =>
+            TextNormalizer.normalize(c).toIsoCountry match {
+              case (true, country) => country; case (false, _) => ""
+            }
+          )
+          .filter(c => c != ""),
         person.label
       )
     )
@@ -109,7 +115,13 @@ class Indexer(
         normalizedName.normNames.toCompactJson,
         Constants.IndexOrganisationNameTypeCode,
         organisation.datesOfFounding,
-        organisation.countries,
+        organisation.countries
+          .map(c =>
+            TextNormalizer.normalize(c).toIsoCountry match {
+              case (true, country) => country; case (false, _) => ""
+            }
+          )
+          .filter(c => c != ""),
         organisation.label
       )
     )
@@ -135,7 +147,13 @@ class Indexer(
         normalizedName.normNames.toCompactJson,
         Constants.IndexPersonNameTypeCode,
         person.datesOfBirth,
-        person.countries,
+        person.countries
+          .map(c =>
+            TextNormalizer.normalize(c).toIsoCountry match {
+              case (true, country) => country; case (false, _) => ""
+            }
+          )
+          .filter(c => c != ""),
         person.label
       )
     )
@@ -162,7 +180,13 @@ class Indexer(
         normalizedName.normNames.toCompactJson,
         Constants.IndexOrganisationNameTypeCode,
         organisation.datesOfFounding,
-        organisation.countries,
+        organisation.countries
+          .map(c =>
+            TextNormalizer.normalize(c).toIsoCountry match {
+              case (true, country) => country; case (false, _) => ""
+            }
+          )
+          .filter(c => c != ""),
         organisation.label
       )
     )

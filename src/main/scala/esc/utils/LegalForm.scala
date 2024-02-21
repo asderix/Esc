@@ -10,27 +10,24 @@ package esc.utils
   * Object providing methods for check an normalizing legal forms.
   */
 object LegalForm {
-  implicit class LegalForm(nameElement : String) {
-
-    /**
-      * Implicit function to check whether a string is a legal form or not.
-      * @return true if it match a legal form, otherwise false.
-      */
-    def isLegalForm : Boolean = {
+  /**
+  * Extension function to check whether a string is a legal form or not.
+  * @return true if it match a legal form, otherwise false.
+  */
+  extension(nameElement : String) def isLegalForm : Boolean = {
       legalFormList.contains(nameElement)
-    }
+  }
 
-    /**
-      * Implicit function to check whether a string is a legal form or not.
-      * @return true if the legal form was found and the normalized legal form name.
-      *         false if not found and the original nameElement string.
-      */
-    def toDeLegalForm : (Boolean, String) = {
+  /**
+  * Extension function to convert a string to a legal form in German.
+  * @return (true, legalFormNameInDe) if the legal form was found.
+  *         (false, originalString) if the legal form was not found.
+  */
+  extension(nameElement : String) def toDeLegalForm : (Boolean, String) = {
       legalForms.get(nameElement) match {
         case Some(x) => (true, x)
         case None => (false, nameElement)
       }
-    }
   }
 
   // ---

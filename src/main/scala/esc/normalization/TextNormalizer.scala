@@ -20,7 +20,13 @@ object TextNormalizer {
     */
   def normalize(text: String): String = {
     val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
-    var mutNormString = text.toLowerCase(Locale.ENGLISH)
+    //var mutNormString = text.toLowerCase(Locale.ENGLISH)
+
+    // Normalized in NFD form (decomposition), in lower case letters
+    var mutNormString = Normalizer
+      .normalize(text, Normalizer.Form.NFD)
+      .toLowerCase(Locale.ENGLISH)
+      .trim
 
     // Relevant special characters from the extended Latin alphabet which have no decomposition in the NFD form
     mutNormString = mutNormString.replace("ø", "o")
@@ -60,13 +66,7 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll("^van *de ", "vande ")
 
     mutNormString = mutNormString.replaceAll(" de *la ", " dela ")
-    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")
-
-    // Normalized in NFD form (decomposition), in lower case letters
-    mutNormString = Normalizer
-      .normalize(mutNormString, Normalizer.Form.NFD)
-      .toLowerCase(Locale.ENGLISH)
-      .trim
+    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")    
 
     // Only standard Latin letters and numbers, hyphens and spaces
     mutNormString = regexPattern replaceAllIn (mutNormString, "")

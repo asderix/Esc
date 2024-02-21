@@ -83,6 +83,21 @@ class IndexTest extends AnyFunSuite {
         new IndexPerson("idp1239", "exipd1239", "Nonsense Mike", List(), List())
       )
     )
+    assert(
+      indexer.addPerson(
+        new IndexPerson("idpCountryC", "exipd1239", "Only Country", List(), List("Vereinigte Arabische Emirate"))
+      )
+    )
+    assert(
+      indexer.addPerson(
+        new IndexPerson("idpAddressSim1", "exipd1250", "Bill Mustermann", List(), List("Schweiz")) // demokratische republik kongo
+      )
+    )
+    assert(
+      indexer.addPerson(
+        new IndexPerson("idpAddressSim2", "exipd1251", "Rebeka Hasenfuss", List(), List("Schweiz")) // demokratische republik kongo
+      )
+    )
     indexer.commit()
     indexer.close()
     val finder = IndexFactory.openIndexForSearch(
@@ -108,6 +123,10 @@ class IndexTest extends AnyFunSuite {
     assert(finder.findPersonByIR("Must*+Han*", List(), List()).size > 0)
     assert(finder.findPersonByIR("Hans+Muster", List(), List()).size > 0)
     assert(finder.findPersonByIR("Hans+Jakob", List(), List()).size == 0)
+
+    assert(finder.findPerson("Only Country", List(), List("Vereinigte Arabische Emirate")).size > 0)
+    assert(finder.findPerson("Only Country", List(), List("CH")).size == 0)
+
     assert(
       finder
         .findByAddress(
@@ -139,7 +158,7 @@ class IndexTest extends AnyFunSuite {
     assert(
       finder
         .findByAddress(
-          "Mr. \n Tobias Müller \n 48 Statestree \n 12345 Cityname \n Australia"
+          "Mr. \n Tobias Müller \n 48 Statestreet \n 12345 Cityname \n Australia"
         )
         .size == 0
     )
@@ -188,6 +207,16 @@ class IndexTest extends AnyFunSuite {
         .findByAddress("Nonsense Mike \n Hauptstrasse 24 \n 3000 Bern")
         .size == 0
     )
+    assert(
+      finder
+        .findByAddress("Hasenfuss Becki \n Hauptstrasse 24 \n 3000 Bern \n Schweiz")
+        .size > 0
+    )
+    assert(
+      finder
+        .findByAddress("William Mustermann \n Hauptstrasse 24 \n 3000 Bern")
+        .size > 0
+    )    
   }
   test("Indexer.IndexOrganisation.1") {
     val indexer = IndexFactory.openOrCreateIndex(
