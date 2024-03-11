@@ -18,9 +18,11 @@ lazy val Esc = (project in file("."))
     libraryDependencies += "org.apache.lucene" % "lucene-analysis-common" % "9.9.1"
   )
 
-assemblyMergeStrategy in assembly := {
+assembly / assemblyMergeStrategy := {
   case "module-info.class" => MergeStrategy.discard
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
+
+assembly / assemblyJarName := "EscEntitySimilarityChecker_0.0.0.jar"

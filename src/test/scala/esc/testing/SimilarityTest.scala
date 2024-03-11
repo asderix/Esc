@@ -16,7 +16,7 @@ import esc.configuration._
   */    
  class SimilarityTest extends AnyFunSuite {   
    val similarity = new NameSimilarity  
-   val similarity2 = new NameSimilarity(SimilarityConfig().copy(allowOneLetterAbbreviation = true))  
+   val similarity2 = new NameSimilarity(SimilarityConfig().copy(allowOneLetterAbbreviation = true))
 
    // -- Person names -- //  
    test("Similarity.PersonName.1") {
@@ -86,6 +86,33 @@ import esc.configuration._
     }
     test("Similarity.OrgName.6") {
         assert(similarity.getOrganisationNameSimilarity("Pharma Discounter AG", "pharmaceutical Discounter AG").similarity > 0.90)
+    }
+
+    // -- Own name element similarities --//
+    nameElementSimilarityDb.addNameElementSimilarity("abcd", "wxyz", 0.99)
+    nameElementSimilarityDb.addNameElementSimilarity("Ronny", "Ronald", 0.01)
+
+    test("Similarity.PersonName.18") {
+       assert(similarity.getPersonNameSimilarity("Hans Abcd", "Hans Wxyz").similarity > 0.98)
+    }
+
+    test("Similarity.PersonName.19") {
+       assert(similarity.getPersonNameSimilarity("Ronny Somename", "Ronald Somename").similarity < 0.72)
+    }    
+
+    test("Similarity.PersonName.20") {
+        nameElementSimilarityDb.removeNameElementSimilarity("abcd", "wxyz")
+        assert(similarity.getPersonNameSimilarity("Hans Abcd", "Hans Wxyz").similarity < 0.75)
+    }
+
+    test("Similarity.PersonName.21") {
+        nameElementSimilarityDb.removeNameElementSimilarity("Ronald", "Ronny")
+        assert(similarity.getPersonNameSimilarity("Ronny Somename", "Ronald Somename").similarity > 0.99)
+    }
+
+    // -- MatchPairs -- //
+    test("Similarity.PersonName.22") {
+       assert(similarity.getPersonNameSimilarity("Bill Somename", "William Somename").matchPairs.toString() == "List((somename,somename,1.0,stringIdent), (bill,william,0.97,libDb))")
     }
  }
 

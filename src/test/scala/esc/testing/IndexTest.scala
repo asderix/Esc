@@ -17,6 +17,7 @@ import java.nio.file._
   */
 class IndexTest extends AnyFunSuite {
   val path: Path = Files.createTempDirectory("EscTest");
+  nameElementSimilarityDb.addNameElementSimilarity("bcde", "qrst", 0.99)
 
   test("Indexer.IndexPerson.1") {
     val indexer = IndexFactory.openOrCreateIndex(
@@ -98,6 +99,12 @@ class IndexTest extends AnyFunSuite {
         new IndexPerson("idpAddressSim2", "exipd1251", "Rebeka Hasenfuss", List(), List("Schweiz")) // demokratische republik kongo
       )
     )
+    assert(
+      indexer.addPerson(
+        new IndexPerson("idpOwnSim1", "exipdOwnSim1", "Hannes Bcde", List(), List("demokratische republik kongo"))
+      )
+    )
+    
     indexer.commit()
     indexer.close()
     val finder = IndexFactory.openIndexForSearch(
@@ -217,6 +224,16 @@ class IndexTest extends AnyFunSuite {
         .findByAddress("William Mustermann \n Hauptstrasse 24 \n 3000 Bern")
         .size > 0
     )    
+    assert(
+      finder
+        .findByAddress("Hauptstrasse 7b \n Qrst Hannes \n 3000 City \n Demokratische Republik Kongo")
+        .size > 0
+    )   
+    assert(
+      finder
+        .findByAddress("Hauptstrasse 7b \n Qrst Hannes \n 3000 City \n Schweiz")
+        .size < 1
+    )   
   }
   test("Indexer.IndexOrganisation.1") {
     val indexer = IndexFactory.openOrCreateIndex(

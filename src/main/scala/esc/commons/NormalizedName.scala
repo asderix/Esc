@@ -20,3 +20,17 @@ case class NormalizedName(
     normNames: Vector[Vector[(String, Double, Byte)]],
     sourceName: String
 )
+
+/**
+  * Case class represent the normNames field of NormalizedName in a readable form
+  * used for explanation and better serialization.
+  * 
+  * @param nameElement
+  * @param weight
+  * @param elementType
+  */
+case class NormalizedNameExplaint(
+    nameElement: String,
+    weight: Double,
+    elementType: Byte
+)

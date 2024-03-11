@@ -11,4 +11,12 @@ package esc.commons
 object Constants {
   val IndexPersonNameTypeCode: String = "p"
   val IndexOrganisationNameTypeCode: String = "o"
+  val similaritySourceStringIdentical: String = "stringIdent"
+  val similaritySourceLibDb: String = "libDb"
+  val similaritySourceOneLetterAbbreviation: String = "oneLetterAbb"
+  val similaritySourceCountryDedection: String = "countryDed"
+  val similaritySourceLegalFormDedection: String = "legalFormDed"
+  val similaritySourceWeightedEditDistance: String = "wEditDist"
+  val similaritySourceOwnSimilarity: String = "ownSim"
+  val similaritySourceUndefined: String = "undef"
 }

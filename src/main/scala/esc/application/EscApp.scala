@@ -27,7 +27,7 @@ object EscApp extends App {
     "# Hello from ESC!                                                                                               #"
   )
   println(
-    "# Version: 2.0.1                                                                                                #"
+    "# Version: 2.1.0                                                                                                #"
   )
   println(
     "# Project website: https://esc.asderix.com                                                                      #"

@@ -56,6 +56,92 @@ class NameSimilarity(
     )
   }
 
+  /** Returns comprehensive information on a personname hit. Not as performant and
+    * therefore not suitable for batch processing. Use this function if a user
+    * cannot understand the hit and needs more detailed information.
+    * You can use toCompactJson method on MatchExplanation to get a json string
+    * of the object.
+    * @param nameA
+    * @param nameB
+    */
+  def explainPersonNameSimilarity(
+      nameA: String,
+      nameB: String
+  ): MatchExplanation = {
+    val similarityConfig: SimilarityConfig = new SimilarityConfig()
+    val nameNormalizer = new NameNormalizer(similarityConfig)
+    val normalizedNameA = nameNormalizer.normalizePersonName(nameA)
+    val normalizedNameB = nameNormalizer.normalizePersonName(nameB)
+    explainNameSimilarity(
+      normalizedNameA,
+      normalizedNameB,
+      Constants.IndexPersonNameTypeCode
+    )
+  }
+
+  /** Returns comprehensive information on a organisation hit. Not as performant and
+    * therefore not suitable for batch processing. Use this function if a user
+    * cannot understand the hit and needs more detailed information.
+    * You can use toCompactJson method on MatchExplanation to get a json string
+    * of the object.
+    * @param nameA
+    * @param nameB
+    */
+  def explainOrganisationNameSimilarity(
+      nameA: String,
+      nameB: String
+  ): MatchExplanation = {
+    val similarityConfig: SimilarityConfig = new SimilarityConfig()
+    val nameNormalizer = new NameNormalizer(similarityConfig)
+    val normalizedNameA = nameNormalizer.normalizeOrganisationName(nameA)
+    val normalizedNameB = nameNormalizer.normalizeOrganisationName(nameB)
+    explainNameSimilarity(
+      normalizedNameA,
+      normalizedNameB,
+      Constants.IndexOrganisationNameTypeCode
+    )
+  }
+
+  /** Returns comprehensive information on a hit. Not as performant and
+    * therefore not suitable for batch processing. Use this function if a user
+    * cannot understand the hit and needs more detailed information.
+    * @param normalizedNameA
+    * @param normalizedNameB
+    */
+  def explainNameSimilarity(
+      normalizedNameA: NormalizedName,
+      normalizedNameB: NormalizedName,
+      personNameType: String
+  ): MatchExplanation = {
+    val matchResult = getNameSimilarity(normalizedNameA, normalizedNameB)
+    MatchExplanation(
+      personNameType,
+      normalizedNameA.sourceName,
+      normalizedNameB.sourceName,
+      TextNormalizer.normalize(normalizedNameA.sourceName),
+      TextNormalizer.normalize(normalizedNameB.sourceName),
+      normalizedNameA.normNames.map { innerVector =>
+        innerVector.map { case (name, weight, elementType) =>
+          NormalizedNameExplaint(name, weight, elementType)
+        }
+      },
+      normalizedNameB.normNames.map { innerVector =>
+        innerVector.map { case (name, weight, elementType) =>
+          NormalizedNameExplaint(name, weight, elementType)
+        }
+      },
+      matchResult.nofHits,
+      matchResult.nofHitsWeighted,
+      matchResult.cov,
+      matchResult.covWeighted,
+      matchResult.similarity,
+      matchResult.matchPairs.map {
+        case (elementA, elementB, similarity, source) =>
+          MatchPairsExplaint(elementA, elementB, similarity, source)
+      }
+    )
+  }
+
   /** Main method to calculate the similarity of two normalized names. It
     * returns a Match object that provides various key figures to match.
     * Attention: Make sure that you only compare the same name types (person or
@@ -63,9 +149,9 @@ class NameSimilarity(
     * organisation).
     *
     * @param normNameA
-    *   NormalizedName a).
+    *   NormalizedName a
     * @param normNameB
-    *   NormalizedName b).
+    *   NormalizedName b
     *
     * @return
     *   Return a Match object with the relevant key figures of the match.
@@ -84,7 +170,7 @@ class NameSimilarity(
         for (nameB <- normNamesB) wSumB = wSumB + nameB._2
 
         val mutFile =
-          mutable.ArrayBuffer.empty[(String, String, Double, Double)]
+          mutable.ArrayBuffer.empty[(String, String, Double, Double, String)]
         val pairs = normNamesA.flatMap(_normNamesA =>
           normNamesB.map(_normNamesB => _normNamesA -> _normNamesB)
         )
@@ -94,12 +180,18 @@ class NameSimilarity(
             case ((a, aw, 1), (b, bw, 1)) => {
               a == b match {
                 case (true) =>
-                  mutFile += ((a, b, 1.0, List(aw, bw).sorted.head))
+                  mutFile += ((
+                    a,
+                    b,
+                    1.0,
+                    List(aw, bw).sorted.head,
+                    Constants.similaritySourceStringIdentical
+                  ))
                 case (false) => {
                   nameElementSimilarityDb.getKnownSimilarity(a, b) match {
-                    case (true, v) =>
-                      mutFile += ((a, b, v, List(aw, bw).sorted.head))
-                    case (false, _) => {
+                    case (true, v, q) =>
+                      mutFile += ((a, b, v, List(aw, bw).sorted.head, q))
+                    case (false, _, _) => {
                       similarityConfig.allowOneLetterAbbreviation match {
                         case (true) => {
                           (a.length(), b.length()) match {
@@ -109,7 +201,8 @@ class NameSimilarity(
                                   a,
                                   b,
                                   1.0,
-                                  List(aw, bw).sorted.head
+                                  List(aw, bw).sorted.head,
+                                  Constants.similaritySourceOneLetterAbbreviation
                                 ))
                             case (_, 1) =>
                               if (b(0) == a(0))
@@ -117,14 +210,16 @@ class NameSimilarity(
                                   a,
                                   b,
                                   1.0,
-                                  List(aw, bw).sorted.head
+                                  List(aw, bw).sorted.head,
+                                  Constants.similaritySourceOneLetterAbbreviation
                                 ))
                             case _ =>
                               mutFile += ((
                                 a,
                                 b,
                                 EditDistance.getEditDistanceSimilarity(a, b),
-                                List(aw, bw).sorted.head
+                                List(aw, bw).sorted.head,
+                                Constants.similaritySourceWeightedEditDistance
                               ))
                           }
                         }
@@ -133,7 +228,8 @@ class NameSimilarity(
                             a,
                             b,
                             EditDistance.getEditDistanceSimilarity(a, b),
-                            List(aw, bw).sorted.head
+                            List(aw, bw).sorted.head,
+                            Constants.similaritySourceWeightedEditDistance
                           ))
                       }
                     }
@@ -148,14 +244,16 @@ class NameSimilarity(
                     a,
                     b,
                     1.0,
-                    similarityConfig.normOrgLegalformWeight
+                    similarityConfig.normOrgLegalformWeight,
+                    Constants.similaritySourceLegalFormDedection
                   ))
                 case (false) =>
                   mutFile += ((
                     a,
                     b,
                     0.0,
-                    similarityConfig.normOrgLegalformWeight
+                    similarityConfig.normOrgLegalformWeight,
+                    Constants.similaritySourceLegalFormDedection
                   ))
               }
             }
@@ -166,14 +264,16 @@ class NameSimilarity(
                     a,
                     b,
                     1.0,
-                    similarityConfig.normOrgCountryWeight
+                    similarityConfig.normOrgCountryWeight,
+                    Constants.similaritySourceCountryDedection
                   ))
                 case (false) =>
                   mutFile += ((
                     a,
                     b,
                     0.0,
-                    similarityConfig.normOrgCountryWeight
+                    similarityConfig.normOrgCountryWeight,
+                    Constants.similaritySourceCountryDedection
                   ))
               }
             }
@@ -183,23 +283,24 @@ class NameSimilarity(
 
         val mutFileR = mutFile.sortBy(_._3).reverse
         val mutCleanFile =
-          mutable.ArrayBuffer.empty[(String, String, Double, Double)]
+          mutable.ArrayBuffer.empty[(String, String, Double, Double, String)]
         val mutCleanFileResult = getCleanMatchArray(mutFileR, mutCleanFile)
 
         var nofHits: Integer = 0
         var nofHitsWeighted: Double = 0.0
         var simSum: Double = 0.0
-        val matchPairs = mutable.ArrayBuffer.empty[(String, String)]
+        val matchPairs =
+          mutable.ArrayBuffer.empty[(String, String, Double, String)]
 
         for (e <- mutCleanFileResult) {
           e match {
-            case ((_, _, s, _))
+            case ((_, _, s, _, _))
                 if s < similarityConfig.nameElementSimilarityForHit =>
-            case ((ea, eb, s, w)) => {
+            case ((ea, eb, s, w, q)) => {
               nofHits = nofHits + 1
               nofHitsWeighted = nofHitsWeighted + w
               simSum = simSum + (s * w)
-              matchPairs += ((ea, eb))
+              matchPairs += ((ea, eb, s, q))
             }
           }
         }
@@ -235,9 +336,9 @@ class NameSimilarity(
 
   // ---
   private def getCleanMatchArray(
-      orig: mutable.ArrayBuffer[(String, String, Double, Double)],
-      clean: mutable.ArrayBuffer[(String, String, Double, Double)]
-  ): mutable.ArrayBuffer[(String, String, Double, Double)] = {
+      orig: mutable.ArrayBuffer[(String, String, Double, Double, String)],
+      clean: mutable.ArrayBuffer[(String, String, Double, Double, String)]
+  ): mutable.ArrayBuffer[(String, String, Double, Double, String)] = {
     val pair = orig.head
     clean += pair
     val tail = orig.tail

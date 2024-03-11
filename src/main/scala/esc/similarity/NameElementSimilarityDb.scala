@@ -8,6 +8,8 @@ package esc.similarity
 
 import esc.utils.BasicFunctions
 import esc.configuration._
+import esc.normalization._
+import esc.commons._
 import scala.collection.mutable
 
 /** Object providing methods for known similarity name element pairs.
@@ -32,13 +34,23 @@ object nameElementSimilarityDb {
   def getKnownSimilarity(
       nameElementA: String,
       nameElementB: String
-  ): (Boolean, Double) = {
+  ): (Boolean, Double, String) = {
+    mutOwnNameElementSimilarities.getOrElse(
+      Seq(nameElementA, nameElementB).sorted.mkString("."),
+      -99.999
+    ) match {
+      case r if r != -99.999 =>
+        return (true, r, Constants.similaritySourceOwnSimilarity)
+      case _ => ()
+    }
+
     nameElementSimilarities.getOrElse(
       Seq(nameElementA, nameElementB).sorted.mkString("."),
       -99.999
     ) match {
-      case r if r == -99.999 => return (false, r)
-      case r                 => return (true, r)
+      case r if r == -99.999 =>
+        return (false, r, Constants.similaritySourceUndefined)
+      case r => return (true, r, Constants.similaritySourceLibDb)
     }
   }
 
@@ -72,13 +84,83 @@ object nameElementSimilarityDb {
       }
     }
 
+    var mutMatchOwnPairs = mutable.ListBuffer.empty[(String, String)]
+    for ((k, v) <- mutOwnNameElementSimilarities) {
+      v match {
+        case s if s >= matchLevel => {
+          val arr = k.split("\\.")
+          mutMatchOwnPairs += ((arr(0), arr(1)))
+        }
+        case _ =>
+      }
+    }
+
     val matchPairs = mutMatchPairs.toList
     val filteredPairs1 = matchPairs.filter(_._1 == nameElement)
     val filteredPairs2 = matchPairs.filter(_._2 == nameElement)
-    val filteredPairs = filteredPairs1 ++ filteredPairs2
+
+    val matchOwnPairs = mutMatchOwnPairs.toList
+    val filteredOwnPairs1 = matchOwnPairs.filter(_._1 == nameElement)
+    val filteredOwnPairs2 = matchOwnPairs.filter(_._2 == nameElement)
+
+    val filteredPairs =
+      filteredPairs1 ++ filteredPairs2 ++ filteredOwnPairs1 ++ filteredOwnPairs2
     filteredPairs.flatMap(t => List(t._1, t._2)).distinct
+  }
+
+  /** Add a similarity value between two name elements. similarity: Value
+    * between 0 and 1.
+    *
+    * @param nameElementA
+    * @param nameElementB
+    * @param similarity
+    */
+  def addNameElementSimilarity(
+      nameElementA: String,
+      nameElementB: String,
+      similarity: Double
+  ): Unit = {
+    require(nameElementA != null)
+    require(nameElementB != null)
+    assert(
+      similarity >= 0 && similarity <= 1,
+      s"The value of similarity' ($similarity) must be between 0 and 1."
+    )
+    mutOwnNameElementSimilarities += (Seq(
+      TextNormalizer.normalizeNameElement(
+        TextNormalizer.normalize(nameElementA)
+      ),
+      TextNormalizer.normalizeNameElement(
+        TextNormalizer.normalize(nameElementB)
+      )
+    ).sorted.mkString(".") -> similarity)
+  }
+
+  /** Remove a similarity value between to name elements.
+    *
+    * @param nameElementA
+    * @param nameElementB
+    */
+  def removeNameElementSimilarity(
+      nameElementA: String,
+      nameElementB: String
+  ): Unit = {
+    require(nameElementA != null)
+    require(nameElementB != null)
+
+    mutOwnNameElementSimilarities -= Seq(
+      TextNormalizer.normalizeNameElement(
+        TextNormalizer.normalize(nameElementA)
+      ),
+      TextNormalizer.normalizeNameElement(
+        TextNormalizer.normalize(nameElementB)
+      )
+    ).sorted.mkString(".")
+
   }
 
   private val nameElementSimilarities =
     NameElementSimilarityIndex1.nameElementSimilarities ++ NameElementSimilarityIndex2.nameElementSimilarities
+
+  private val mutOwnNameElementSimilarities = mutable.Map[String, Double]()
 }

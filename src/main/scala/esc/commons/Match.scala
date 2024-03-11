@@ -32,5 +32,21 @@ case class Match(
     cov: Double,
     covWeighted: Double,
     similarity: Double,
-    matchPairs: List[(String, String)]
+    matchPairs: List[(String, String, Double, String)]
+)
+
+/**
+  * Case class represent the matchPairs field of a Match in a readable form.
+  * Used for explanation and better serialization.
+  *
+  * @param elementA
+  * @param elementB
+  * @param similarity
+  * @param sourceOfSimilarity
+  */
+case class MatchPairsExplaint(
+    elementA: String,
+    elementB: String,
+    similarity: Double,
+    sourceOfSimilarity: String
 )
