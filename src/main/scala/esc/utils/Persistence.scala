@@ -12,17 +12,35 @@ import esc.commons.MatchPairsExplaint
 import esc.commons.NormalizedNameExplaint
 import esc.commons.MatchExplanation
 
-/**
-  * Object providing methods for serialization and deserialization.
+/** Object providing methods for serialization and deserialization.
   */
 object Persistence {
-  implicit val normalizedNameExplaint: upickle.default.ReadWriter[NormalizedNameExplaint] = upickle.default.macroRW[NormalizedNameExplaint]
-  implicit val matchPairsExplaint: upickle.default.ReadWriter[MatchPairsExplaint] = upickle.default.macroRW[MatchPairsExplaint]
-  implicit val matchExplanationRW: upickle.default.ReadWriter[MatchExplanation] = upickle.default.macroRW[MatchExplanation]
+  implicit val normalizedNameExplaintRW
+      : upickle.default.ReadWriter[NormalizedNameExplaint] =
+    upickle.default.macroRW[NormalizedNameExplaint]
+  implicit val matchPairsExplaintRW
+      : upickle.default.ReadWriter[MatchPairsExplaint] =
+    upickle.default.macroRW[MatchPairsExplaint]
+  implicit val matchExplanationRW
+      : upickle.default.ReadWriter[MatchExplanation] =
+    upickle.default.macroRW[MatchExplanation]
+  implicit val matchRW: upickle.default.ReadWriter[Match] =
+    upickle.default.macroRW[Match]
+  implicit val finderMatchRW: upickle.default.ReadWriter[FinderMatch] =
+    upickle.default.macroRW[FinderMatch]
 
-  extension(normalizedNameVector: Vector[Vector[(String, Double, Byte)]]) def toCompactJson: String = upickle.default.write(normalizedNameVector)
-  extension(normalizedNameVectorJson: String) def toNormalizedNameVector: Vector[Vector[(String, Double, Byte)]] =
+  extension (normalizedNameVector: Vector[Vector[(String, Double, Byte)]])
+    def toCompactJson: String = upickle.default.write(normalizedNameVector)
+  extension (normalizedNameVectorJson: String)
+    def toNormalizedNameVector: Vector[Vector[(String, Double, Byte)]] =
       upickle.default
         .read[Vector[Vector[(String, Double, Byte)]]](normalizedNameVectorJson)
-  extension(matchExplanation: MatchExplanation) def toCompactJson: String = upickle.default.write(matchExplanation)
+  extension (matchExplanation: MatchExplanation)
+    def toCompactJson: String = upickle.default.write(matchExplanation)
+  extension (escMatch: Match)
+    def toCompactJson: String = upickle.default.write(escMatch)
+  extension (finderMatch: FinderMatch)
+    def toCompactJson: String = upickle.default.write(finderMatch)
+  extension (finderMatchList: List[FinderMatch])
+    def toCompactJson: String = upickle.default.write(finderMatchList)
 }

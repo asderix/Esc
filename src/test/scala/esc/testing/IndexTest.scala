@@ -16,7 +16,7 @@ import java.nio.file._
 /** Test-class for the index operations (index & search).
   */
 class IndexTest extends AnyFunSuite {
-  val path: Path = Files.createTempDirectory("EscTest");
+  val path: Path = Files.createTempDirectory("EscTest")
   nameElementSimilarityDb.addNameElementSimilarity("bcde", "qrst", 0.99)
 
   test("Indexer.IndexPerson.1") {

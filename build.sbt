@@ -25,4 +25,4 @@ assembly / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
-assembly / assemblyJarName := "EscEntitySimilarityChecker_2.2.0.jar"
+assembly / assemblyJarName := "EscEntitySimilarityChecker_2.3.0.jar"
