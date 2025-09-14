@@ -7,7 +7,7 @@
 package esc.utils
 
 import esc.commons.FinderMatch
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import java.util.{List => JavaList}
 import java.util.{Map => JavaMap}
 

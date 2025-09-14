@@ -64,6 +64,7 @@ class Finder(
   val addressNormalizer =
     new AddressNormalizer(similarityConfig, adrCheckStopWords, adrCheckHitWords)
   val loadTimestamp: Date = Calendar.getInstance().getTime()
+  IndexSearcher.setMaxClauseCount(Int.MaxValue)
 
   /** Method to find a person by name with countries and dates of birth as
     * filter. Optional you can use label as an additional filter (if is
@@ -251,8 +252,9 @@ class Finder(
       return List[FinderMatch]()
 
     val mutAllMatches = mutable.ListBuffer.empty[(String, FinderMatch)]
-    for (scoreDoc <- hits.scoreDocs) {
-      val doc = indexSearcher.doc(scoreDoc.doc)
+    val stored = indexSearcher.storedFields()
+    for (scoreDoc <- hits.scoreDocs) {      
+      val doc: Document = stored.document(scoreDoc.doc)
       val normNameB = NormalizedName(doc.get("json").toNormalizedNameVector, "")
       val simMatch = nameSimilarity.getNameSimilarity(normNameA, normNameB)
 
@@ -310,8 +312,9 @@ class Finder(
       return List[FinderMatch]()
 
     val mutAllMatches = mutable.ListBuffer.empty[FinderMatch]
-    for (scoreDoc <- hits.scoreDocs) {
-      val doc = indexSearcher.doc(scoreDoc.doc)
+    val stored = indexSearcher.storedFields()
+    for (scoreDoc <- hits.scoreDocs) {      
+      val doc: Document = stored.document(scoreDoc.doc)
       val id = doc.get("id")
       val exid = doc.get("exid")
       val name = doc.get("name")
@@ -338,8 +341,6 @@ class Finder(
       nameType: String,
       label: String
   ): BooleanQuery = {
-    BooleanQuery.setMaxClauseCount(Int.MaxValue)
-
     val csList = "cs:xx" :: countries
       .map(c =>
         TextNormalizer.normalize(c).toIsoCountry match {
@@ -463,8 +464,6 @@ class Finder(
       nameType: String,
       label: String
   ): BooleanQuery = {
-    BooleanQuery.setMaxClauseCount(Int.MaxValue)
-
     val csList = "cs:xx" :: countries
       .map(c =>
         TextNormalizer.normalize(c).toIsoCountry match {
@@ -542,8 +541,6 @@ class Finder(
       countries: List[String],
       label: String
   ): BooleanQuery = {
-    BooleanQuery.setMaxClauseCount(Int.MaxValue)
-
     val csList = "cs:xx" :: countries
       .map(c =>
         TextNormalizer.normalize(c).toIsoCountry match {
@@ -555,6 +552,7 @@ class Finder(
 
     val wordQuery = new QueryParser("ir", new WhitespaceAnalyzer())
     val addressQueryBuilder = new BooleanQuery.Builder()
+
     for (e <- addressItems) {
       for (
         xe <- List(List(e), nameElementSimilarityDb.getMatchList(e)).flatten.distinct

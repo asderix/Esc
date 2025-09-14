@@ -81,32 +81,33 @@ object EditDistance {
     *   distance.
     */
   def getEditDistance[A](
-      textA: Iterable[A],
-      textB: Iterable[A]
+    textA: Iterable[A],
+    textB: Iterable[A]
   ): (Int, Double, Double) = {
     var wr: Double = 0.0
     var lastChar: String = ""
-    val ed = ((0 to textB.size).toList /: textA)((prev, x) =>
+    val ed = textA.foldLeft((0 to textB.size).toList) { (prev, x) =>
       (prev zip prev.tail zip textB).scanLeft(prev.head + 1) {
         case (h, ((d, v), y)) => {
           min(
             min(h + 1, v + 1),
-            d + (if (x == y) { if (d == 0) lastChar = x.toString; 0 }
-                 else {
-                   if (d == 0) {
-                     wr = wr + getCharReplacmentReduction(
-                       x.toString,
-                       y.toString,
-                       lastChar
-                     )
-                     lastChar = x.toString
-                   }
-                   1
-                 })
+            d + (if (x == y) {
+              if (d == 0) lastChar = x.toString; 0
+            } else {
+              if (d == 0) {
+                wr = wr + getCharReplacmentReduction(
+                  x.toString,
+                  y.toString,
+                  lastChar
+                )
+                lastChar = x.toString
+              }
+              1
+            })
           )
         }
       }
-    ) last
+    } last
 
     (ed, wr, ed - wr)
   }
