@@ -170,14 +170,19 @@ class NameSimilarity(
         for (nameB <- normNamesB) wSumB = wSumB + nameB._2
 
         val mutFile =
-          mutable.ArrayBuffer.empty[(String, String, Double, Double, String)]
+          mutable.ArrayBuffer.empty[(String, String, Double, Double, String, Int, Int)]
         val pairs = normNamesA.flatMap(_normNamesA =>
           normNamesB.map(_normNamesB => _normNamesA -> _normNamesB)
         )
 
-        for (pair <- pairs) {
+        val pairsWithIndex = for {
+          _normNamesA <- normNamesA.zipWithIndex
+          _normNamesB <- normNamesB.zipWithIndex
+        } yield (_normNamesA, _normNamesB)
+
+        for (pair <- pairsWithIndex) {
           pair match {
-            case ((a, aw, 1), (b, bw, 1)) => {
+            case (((a, aw, 1), idxA), ((b, bw, 1), idxB)) => {
               a == b match {
                 case (true) =>
                   mutFile += ((
@@ -185,12 +190,14 @@ class NameSimilarity(
                     b,
                     1.0,
                     List(aw, bw).sorted.head,
-                    Constants.similaritySourceStringIdentical
+                    Constants.similaritySourceStringIdentical,
+                    idxA,
+                    idxB
                   ))
                 case (false) => {
                   nameElementSimilarityDb.getKnownSimilarity(a, b) match {
                     case (true, v, q) =>
-                      mutFile += ((a, b, v, List(aw, bw).sorted.head, q))
+                      mutFile += ((a, b, v, List(aw, bw).sorted.head, q, idxA, idxB))
                     case (false, _, _) => {
                       similarityConfig.allowOneLetterAbbreviation match {
                         case (true) => {
@@ -202,7 +209,9 @@ class NameSimilarity(
                                   b,
                                   1.0,
                                   List(aw, bw).sorted.head,
-                                  Constants.similaritySourceOneLetterAbbreviation
+                                  Constants.similaritySourceOneLetterAbbreviation,
+                                  idxA,
+                                  idxB
                                 ))
                             case (_, 1) =>
                               if (b(0) == a(0))
@@ -211,7 +220,9 @@ class NameSimilarity(
                                   b,
                                   1.0,
                                   List(aw, bw).sorted.head,
-                                  Constants.similaritySourceOneLetterAbbreviation
+                                  Constants.similaritySourceOneLetterAbbreviation,
+                                  idxA,
+                                  idxB
                                 ))
                             case _ =>
                               mutFile += ((
@@ -219,7 +230,9 @@ class NameSimilarity(
                                 b,
                                 EditDistance.getEditDistanceSimilarity(a, b),
                                 List(aw, bw).sorted.head,
-                                Constants.similaritySourceWeightedEditDistance
+                                Constants.similaritySourceWeightedEditDistance,
+                                idxA,
+                                idxB
                               ))
                           }
                         }
@@ -229,7 +242,9 @@ class NameSimilarity(
                             b,
                             EditDistance.getEditDistanceSimilarity(a, b),
                             List(aw, bw).sorted.head,
-                            Constants.similaritySourceWeightedEditDistance
+                            Constants.similaritySourceWeightedEditDistance,
+                            idxA,
+                            idxB
                           ))
                       }
                     }
@@ -237,7 +252,7 @@ class NameSimilarity(
                 }
               }
             }
-            case ((a, aw, 2), (b, bw, 2)) => {
+            case (((a, aw, 2), idxA), ((b, bw, 2), idxB)) => {
               a == b match {
                 case (true) =>
                   mutFile += ((
@@ -245,7 +260,9 @@ class NameSimilarity(
                     b,
                     1.0,
                     similarityConfig.normOrgLegalformWeight,
-                    Constants.similaritySourceLegalFormDedection
+                    Constants.similaritySourceLegalFormDedection,
+                    idxA,
+                    idxB
                   ))
                 case (false) =>
                   mutFile += ((
@@ -253,11 +270,13 @@ class NameSimilarity(
                     b,
                     0.0,
                     similarityConfig.normOrgLegalformWeight,
-                    Constants.similaritySourceLegalFormDedection
+                    Constants.similaritySourceLegalFormDedection,
+                    idxA,
+                    idxB
                   ))
               }
             }
-            case ((a, aw, 3), (b, bw, 3)) => {
+            case (((a, aw, 3), idxA), ((b, bw, 3), idxB)) => {
               a == b match {
                 case (true) =>
                   mutFile += ((
@@ -265,7 +284,9 @@ class NameSimilarity(
                     b,
                     1.0,
                     similarityConfig.normOrgCountryWeight,
-                    Constants.similaritySourceCountryDedection
+                    Constants.similaritySourceCountryDedection,
+                    idxA,
+                    idxB
                   ))
                 case (false) =>
                   mutFile += ((
@@ -273,7 +294,9 @@ class NameSimilarity(
                     b,
                     0.0,
                     similarityConfig.normOrgCountryWeight,
-                    Constants.similaritySourceCountryDedection
+                    Constants.similaritySourceCountryDedection,
+                    idxA,
+                    idxB
                   ))
               }
             }
@@ -281,10 +304,8 @@ class NameSimilarity(
           }
         }
 
-        val mutFileR = mutFile.sortBy(_._3).reverse
-        val mutCleanFile =
-          mutable.ArrayBuffer.empty[(String, String, Double, Double, String)]
-        val mutCleanFileResult = getCleanMatchArray(mutFileR, mutCleanFile)
+        val mutFileR = mutFile.sortBy(_._3).reverse        
+        val mutCleanFileResult = getCleanMatchArray(mutFileR)
 
         var nofHits: Integer = 0
         var nofHitsWeighted: Double = 0.0
@@ -294,9 +315,9 @@ class NameSimilarity(
 
         for (e <- mutCleanFileResult) {
           e match {
-            case ((_, _, s, _, _))
+            case ((_, _, s, _, _, _, _))
                 if s < similarityConfig.nameElementSimilarityForHit =>
-            case ((ea, eb, s, w, q)) => {
+            case ((ea, eb, s, w, q, _, _)) => {
               nofHits = nofHits + 1
               nofHitsWeighted = nofHitsWeighted + w
               simSum = simSum + (s * w)
@@ -336,17 +357,21 @@ class NameSimilarity(
 
   // ---
   private def getCleanMatchArray(
-      orig: mutable.ArrayBuffer[(String, String, Double, Double, String)],
-      clean: mutable.ArrayBuffer[(String, String, Double, Double, String)]
-  ): mutable.ArrayBuffer[(String, String, Double, Double, String)] = {
-    val pair = orig.head
-    clean += pair
-    val tail = orig.tail
-    val tClean = tail.filter(_._1 != pair._1).filter(_._2 != pair._2)
+    orig: mutable.ArrayBuffer[(String, String, Double, Double, String, Int, Int)]
+  ): mutable.ArrayBuffer[(String, String, Double, Double, String, Int, Int)] = {
+    
+    val usedIndexA = mutable.Set[Int]()
+    val usedIndexB = mutable.Set[Int]()
+    val clean = mutable.ArrayBuffer.empty[(String, String, Double, Double, String, Int, Int)]
 
-    tClean.isEmpty match {
-      case true => clean
-      case _    => getCleanMatchArray(tClean, clean)
+    for (pair @ (a, b, s, w, q, idxA, idxB) <- orig) {
+        if (!usedIndexA.contains(idxA) && !usedIndexB.contains(idxB)) {
+            clean += pair
+            usedIndexA += idxA
+            usedIndexB += idxB
+        }
     }
+    
+    clean
   }
 }

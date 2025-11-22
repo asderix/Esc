@@ -19,25 +19,30 @@ object TextNormalizer {
     *   Return the normalized String.
     */
   def normalize(text: String): String = {
-    val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
-    //var mutNormString = text.toLowerCase(Locale.ENGLISH)
+    //val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
+    val regexPattern = "[^\\p{L}0-9 \\-]".r
 
-    // Normalized in NFD form (decomposition), in lower case letters
+    // Normalized in NFKD form (decomposition), compatibily mode, in lower case letters
     var mutNormString = Normalizer
-      .normalize(text, Normalizer.Form.NFD)
+      .normalize(text, Normalizer.Form.NFKD)
       .toLowerCase(Locale.ENGLISH)
-      .trim
 
-    // Relevant special characters from the extended Latin alphabet which have no decomposition in the NFD form
+    // Relevant special characters from the extended Latin alphabet which have no decomposition in the NFKD form
     mutNormString = mutNormString.replace("ø", "o")
     mutNormString = mutNormString.replace("œ", "oe")
     mutNormString = mutNormString.replace("ß", "ss")
     mutNormString = mutNormString.replace("æ", "ae")
-    mutNormString = mutNormString.replace("¢", "c")
+    mutNormString = mutNormString.replace("¢", "c")    
+    mutNormString = mutNormString.replace("ə", "a")
+    mutNormString = mutNormString.replace("ı", "i")
 
+    // Arabic chars from transliteration
+    mutNormString = mutNormString.replace("ʿbd", "abd")
+    mutNormString = mutNormString.replace("ʿly", "ali")
+    
     // Special characters that are relevant for the name comparison
-    mutNormString = mutNormString.replace("&", "and")
-    mutNormString = mutNormString.replace("+", "and")
+    mutNormString = mutNormString.replace("&", "plus")
+    mutNormString = mutNormString.replace("+", "plus")
     mutNormString = mutNormString.replace("@", "at")
     mutNormString = mutNormString.replace("\n", " ")
 
@@ -48,10 +53,7 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll(" *- *", "-")
     mutNormString = mutNormString.replaceAll("^-", "")
     mutNormString = mutNormString.replaceAll("-$", "")
-
-    // Spelling with special characters
-    mutNormString = mutNormString.replace("mª", "maria")
-
+    
     // several name elements that only make sense together and represent one element
     mutNormString = mutNormString.replaceAll(" von *der ", " vonder ")
     mutNormString = mutNormString.replaceAll("^von *der ", "vonder ")
@@ -70,7 +72,7 @@ object TextNormalizer {
 
     // Only standard Latin letters and numbers, hyphens and spaces
     mutNormString = regexPattern replaceAllIn (mutNormString, "")
-    mutNormString
+    mutNormString.trim
   }
 
   /** Special normalize method for organisation names. This method take care of
@@ -101,7 +103,7 @@ object TextNormalizer {
     mutNormString =
       mutNormString.replace("stiftung *and *co *kgaa", "stiftung_and_co_gkaa")
 
-    mutNormString = mutNormString.replace("co-operativ", "cooperativ")
+    mutNormString = mutNormString.replace("co-operative", "cooperative")
     mutNormString =
       mutNormString.replace("societe *cooperative", "societe_cooperative")
     mutNormString =
@@ -136,6 +138,8 @@ object TextNormalizer {
     mutNormNameElement = mutNormNameElement.replaceAll("witsch-{1}", "vic-")
     mutNormNameElement = mutNormNameElement.replaceAll("vich${1}", "vic")
     mutNormNameElement = mutNormNameElement.replaceAll("vich-{1}", "vic-")
+    mutNormNameElement = mutNormNameElement.replaceAll("vitch${1}", "vic")
+    mutNormNameElement = mutNormNameElement.replaceAll("vitch-{1}", "vic-")
     mutNormNameElement = mutNormNameElement.replaceAll("off${1}", "ov")
     mutNormNameElement = mutNormNameElement.replaceAll("off-{1}", "ov-")
 

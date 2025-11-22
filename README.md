@@ -43,3 +43,12 @@ Alternatively to the release (complete binary with all dependencies) on Github, 
 
 ## Bugs & features
 Please report bugs or missed features to: info@asderix.com.
+
+## License:
+Apache 2.0.
+
+## Third pary libraries
+Credit to the following third party libraries:
+- Apache Lucene (Apache 2.0)
+- ICU4J (Unicode-3.0)
+- UPickle (MIT)

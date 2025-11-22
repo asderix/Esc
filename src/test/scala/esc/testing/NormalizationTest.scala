@@ -36,9 +36,10 @@ class NormalizationTest extends AnyFunSuite {
     val normalizer = new NameNormalizer
     assert(
       normalizer
-        .normalizePersonName("Sœur Saßenach mª")
+        .normalizePersonName("Sœur Saßenach mariª")
         .normNames
         .toString == "Vector(Vector((soeursassenach,1.0,1), (maria,1.0,1)), Vector((soeur,1.0,1), (sassenachmaria,1.0,1)), Vector((soeur,1.0,1), (sassenach,1.0,1), (maria,1.0,1)))"
+                     
     )
   }
   test("Normalization.PersonName.4") {

@@ -27,7 +27,7 @@ object EscApp extends App {
     "# Hello from ESC!                                                                                               #"
   )
   println(
-    "# Version: 2.5.0                                                                                                #"
+    "# Version: 3.0.0                                                                                                #"
   )
   println(
     "# Project website: https://esc.asderix.com                                                                      #"
@@ -37,11 +37,18 @@ object EscApp extends App {
   )
   println("")
 
-  println("# Type -pnorm '[name]' for person name normalization")
-  println("# Type -onorm '[name]' for organisation name normalization")
-  println("# Type -pnm '[nameA]','[nameB]' for person name name-matching.")
+  println("*** Disclaimer: ***")
+  println("This CLI is only a simple demo.")
+  println("It is not suitable for productive use, nor is it suitable for evaluating the capabilities of the library.")
+  println("It uses simple basic settings.")
+  println("*** End Disclaimer: ***")
+  println("")
+
+  println("# Type -pnorm [name] for person name normalization")
+  println("# Type -onorm [name] for organisation name normalization")
+  println("# Type -pnm [nameA],[nameB] for person name name-matching.")
   println(
-    "# Type -onm '[nameA]','[nameB]' for organisation name name-matching."
+    "# Type -onm [nameA],[nameB] for organisation name name-matching."
   )
   println("# Type exit for exit.")
   println("")
@@ -66,7 +73,7 @@ object EscApp extends App {
 
     if (input.contains("-pnm ")) {
       val cString = input.replace("-pnm ", "")
-      val names = cString.split(",")
+      val names = cString.split(",")      
       println(sim.getPersonNameSimilarity(names(0), names(1)).toString)
 
     }

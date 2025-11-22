@@ -41,7 +41,7 @@ object LegalForm {
     "gmbh_and_co_kg" -> "gmbh_and_co_kg",
     "gmbh_and_co_kgaa" -> "gmbh_and_co_kgaa",
     "gmbh_and_co_ohg" -> "gmbh_and_co_ohg", "gmbh_and_co_kg" -> "gmbh_and_co_ohg", "gmbh_and_co_kgaa" -> "gmbh_and_co_ohg",
-    "genossenschaft" -> "gen", "gen" -> "gen", "cooperativ" -> "gen", "societe_cooperative" -> "gen", "societa_cooperativa" -> "gen",
+    "genossenschaft" -> "gen", "gen" -> "gen", "cooperative" -> "gen", "societe_cooperative" -> "gen", "societa_cooperativa" -> "gen",
     "stiftung" -> "stiftung",  "foundation" -> "stiftung",  "fondation" -> "stiftung", "stiftung_and_co_gkaa" -> "stiftung",
     "stiftung_and_co_kgaa" -> "stiftung_and_co_kgaa",
     "ohg_mbh" -> "ohg_mbh",
