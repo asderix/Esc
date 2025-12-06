@@ -12,6 +12,7 @@ import esc.similarity._
 import esc.configuration._
 import esc.utils._
 import esc.utils.Persistence._
+import esc.ai._
 
 /**
   * Test-class for explain function tests.
@@ -31,5 +32,15 @@ import esc.utils.Persistence._
    // -- Organisation names -- //  
    test("SimilarityExplain.OrganisationName.1") {
     assert(similarity.explainOrganisationNameSimilarity("UBS (Schweiz) AG", "UBS (Switzerland) ltd.").similarity == 1.0)
+   }
+
+   // -- AiAgent
+   test("SimilarityExplainAi.Print.1") {
+    println(AiAgent.explainMatch(similarity.explainPersonNameSimilarity("Vladimir Yevtushenkov", "Wladimir Jewtuschenkow")))
+    assert(true)
+   }
+   test("SimilarityExplainAi.Print.2") {
+    println(AiAgent.explainMatch(similarity.explainPersonNameSimilarity("Vladimir Yevtushenkov", "Wladimir Jewtuschenkow"), "Deutsch"))
+    assert(true)
    }
  }

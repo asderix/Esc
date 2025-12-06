@@ -43,7 +43,7 @@ class NameNormalizer(
 
     whitespaceSplit.length match {
       case x if x > 2 =>
-        buildWhitespaceVariations(
+        buildPersonNameWhitespaceVariations(
           whitespaceSplit,
           mutWhitespaceVariations,
           0,
@@ -133,7 +133,7 @@ class NameNormalizer(
       case "der"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "von"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "van"    => reducedWeight = initialWeight - 0.8; isReduced = true
-      case "del"    => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "del"    => reducedWeight = initialWeight - 0.8; isReduced = true      
       case "di"     => reducedWeight = initialWeight - 0.8; isReduced = true
       case "de"     => reducedWeight = initialWeight - 0.8; isReduced = true
       case "da"     => reducedWeight = initialWeight - 0.8; isReduced = true
@@ -141,6 +141,7 @@ class NameNormalizer(
       case "zur"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "ar"     => reducedWeight = initialWeight - 0.8; isReduced = true
       case "al"     => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "ala"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "bin"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "el"     => reducedWeight = initialWeight - 0.8; isReduced = true
       case "abd"    => reducedWeight = initialWeight - 0.8; isReduced = true
@@ -214,6 +215,42 @@ class NameNormalizer(
   }
 
   // ---
+  private def buildPersonNameWhitespaceVariations(
+      whitespaceSplit: Vector[String],
+      mutWhitespaceCombinations: mutable.ArrayBuffer[
+        mutable.ArrayBuffer[String]
+      ],
+      counter: Int,
+      length: Int
+  ): Unit = {
+    val whitespaceCombination = mutable.ArrayBuffer.empty[String]
+    var scip: Boolean = false
+    whitespaceSplit.zipWithIndex.foreach {
+      case e if e._2 == counter && counter + 1 < length => {
+        (
+          persNameElementReducedWeight(e._1, 1.0)._2,
+          persNameElementReducedWeight(whitespaceSplit(e._2 + 1), 1.0)._2
+        ) match {
+          case (false, true) => scip = true
+          case _ => whitespaceCombination += e._1 + whitespaceSplit(e._2 + 1)
+        }
+      }
+      case e if e._2 == counter + 1 =>
+      case e                        => whitespaceCombination += e._1
+    }
+    if (!scip)
+      mutWhitespaceCombinations += whitespaceCombination
+
+    if (counter + 1 < length)
+      buildPersonNameWhitespaceVariations(
+        whitespaceSplit,
+        mutWhitespaceCombinations,
+        counter + 1,
+        length
+      )
+  }
+
+  // ---
   private def buildPersonNameElementCombinations(
       whitespaceVariations: Vector[String],
       mutNameElementCombinations: mutable.ArrayBuffer[
@@ -232,7 +269,7 @@ class NameNormalizer(
         case _ =>
           val mutNameElementSubVariations =
             mutable.ArrayBuffer.empty[mutable.ArrayBuffer[String]]
-          buildWhitespaceVariations(
+          buildPersonNameWhitespaceVariations(
             nameElementHyphenSplit,
             mutNameElementSubVariations,
             0,
@@ -260,22 +297,23 @@ class NameNormalizer(
               1
             ))
           case _ =>
-            e.zipWithIndex.foreach(he => {
-              he._2 match {
-                case 0 =>
-                  mutNameElement += ((
-                    he._1,
-                    firstNameElementReducedWeight(he._1, 1.0),
-                    1
-                  ))
-                case _ =>
-                  mutNameElement += ((
-                    he._1,
-                    firstNameElementReducedWeight(he._1, 1.0 / e.length),
-                    1
-                  ))
+            e.zipWithIndex.foreach { case (he, idx) =>
+              val prevWeightReduced = if (idx > 0) {
+                val (prevName, prevWeight, prevByte) = mutNameElement(idx - 1)
+                prevWeight < 1.0
+              } else false
+
+              val weight = idx match {
+                case 0 => firstNameElementReducedWeight(he, 1.0)
+                case 1 => (prevWeightReduced, firstNameElementReducedWeight(he, 1.0) < 1.0) match {
+                  case (true, false) => 1.0
+                  case _ => firstNameElementReducedWeight(he, 1.0) / e.length
+                }
+                case _ => firstNameElementReducedWeight(he, 1.0) / e.length
               }
-            })
+
+              mutNameElement += ((he, weight, 1))
+            }
         }
       })
       mutNameElementCombinations += mutNameElement

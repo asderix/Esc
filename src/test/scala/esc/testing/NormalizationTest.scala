@@ -6,12 +6,16 @@
 
 package esc.testing
 
+import java.nio.file.Paths
 import org.scalatest.funsuite.AnyFunSuite
 import esc.normalization._
+import esc.ai._
 
 /** Test-class for normalization tests.
   */
 class NormalizationTest extends AnyFunSuite {
+  AiAgent.loadModel(Paths.get("../models/Mistral-Small-3.2-24B-Instruct-2506-Q4_0.gguf").toAbsolutePath.normalize().toString)  
+  
   // -- Names -- //
   val normalizer = new NameNormalizer
   test("Normalization.PersonName.1") {
@@ -29,7 +33,7 @@ class NormalizationTest extends AnyFunSuite {
       normalizer
         .normalizePersonName("Hans-Peter Meyer")
         .normNames
-        .toString == "Vector(Vector((hanspeter,1.0,1), (meyer,1.0,1)), Vector((hans,0.6,1), (peter,0.09999999999999998,1), (meyer,1.0,1)))"
+        .toString == "Vector(Vector((hanspeter,1.0,1), (meyer,1.0,1)), Vector((hans,0.6,1), (peter,0.3,1), (meyer,1.0,1)))"                  
     )
   }
   test("Normalization.PersonName.3") {
@@ -48,10 +52,18 @@ class NormalizationTest extends AnyFunSuite {
       normalizer
         .normalizePersonName("Van de Saar Nikolowitsch")
         .normNames
-        .toString == "Vector(Vector((vandesaar,1.0,1), (nikolovic,1.0,1)), Vector((vande,0.19999999999999996,1), (saarnikolovic,1.0,1)), Vector((vande,0.19999999999999996,1), (saar,1.0,1), (nikolovic,1.0,1)))"
+        .toString == "Vector(Vector((vandesaar,1.0,1), (nikolovich,1.0,1)), Vector((vande,0.19999999999999996,1), (saarnikolovich,1.0,1)), Vector((vande,0.19999999999999996,1), (saar,1.0,1), (nikolovich,1.0,1)))"
     )
   }
-
+  test("Normalization.PersonName.5") {
+    val normalizer = new NameNormalizer
+    assert(
+      normalizer
+        .normalizePersonName("Al-Afrabi Mohammad")
+        .normNames
+        .toString == "Vector(Vector((alafrabi,1.0,1), (mohammad,1.0,1)), Vector((al,0.19999999999999996,1), (afrabi,1.0,1), (mohammad,1.0,1)))"                     
+    )
+  }
   test("Normalization.OrgName.1") {
     val normalizer = new NameNormalizer
     assert(
@@ -70,6 +82,46 @@ class NormalizationTest extends AnyFunSuite {
         .toString == "Vector(Vector((hubermuller,1.0,1), (meier,0.5,1), (ag,0.25,2)), Vector((huber,1.0,1), (mullermeier,0.5,1), (ag,0.25,2)), Vector((huber,1.0,1), (muller,0.3333333333333333,1), (meier,0.3333333333333333,1), (ag,0.25,2)))"
     )
   }
+
+  // BestGuessTransliteration
+  test("Normalization.BestGuessTransliteration.1") {
+    val n = Transliterator.transToLatinBestGuess("محمد علي")
+    assert(
+      n == "Muhammad Ali" || n == "Ali Muhammad"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.2") {
+    assert(
+      Transliterator.transToLatinBestGuess("Владимир Путин") == "Vladimir Putin"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.3") {
+    assert(
+      Transliterator.transToLatinBestGuess("Hans Vögeli") == "Hans Vögeli"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.4") {
+    assert(
+      Transliterator.transToLatinBestGuess("習近平 / 习近平") == "Xi Jinping"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.5") {
+    val n = Transliterator.transToLatinBestGuess("山田 太郎")
+    assert(
+       n == "Yamada Taro" || n == "Yamada Tarou"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.6") {
+    assert(
+      Transliterator.transToLatinBestGuess("ராமன் குமார்") == "raman kumar"
+    )
+  }
+  test("Normalization.BestGuessTransliteration.7") {
+    assert(
+      Transliterator.transToLatinBestGuess("Γεώργιος Παπαδόπουλος") == "Georgios Papadopoulos"
+    )
+  }
+
   // -- Dates -- //
   test("Normalization.Date.mMMMdyyyy") {
     val normalizer = DateNormalizer

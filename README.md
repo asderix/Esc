@@ -16,7 +16,7 @@
                           |___/                                          |___/                                       
 
 ## Description
-A powerful name matching library that is easy to use. Built on the shoulders of giants.
+An AI powered powerful name matching library that is easy to use. Built on the shoulders of giants.
 
 The solution supports various name-matching problems. Examples are Spelling mistakes, different spellings,
 translation and transcription differences, hyphenation and merging, order of name elements, missing name
@@ -27,6 +27,8 @@ domicile, etc.) and dates of birth/dates of founding is also supported.
 
 The solution is optimized both for the comparison of natural persons and for the comparison of companies and
 organizations.
+
+Thanks to a LLM integration it's support good transliteration even for scripts like arabic.
 
 ## Status
 The library is available in a stable version.
@@ -41,14 +43,28 @@ Find the current version of the ScalaDoc here: https://esc.asderix.com/scaladoc/
 ## Get binary
 Alternatively to the release (complete binary with all dependencies) on Github, the binary can also be downloaded on the project website: https://esc.asderix.com/download.html
 
+## LLM usage
+To use the LLM capabilities of this library you have to provide a local LLM model. The library is tested with the following
+open source model: Mistral-Small-3.2-24B-Instruct-2506-Q4_0.gguf
+Supported are all models in a format which is supported by llama.cpp. Most likley the GGUF format.
+Call one of the following methods before using LLM bases functionalities:
+- LMRunner.loadModel(path_to_the_model)
+- AiAgent.loadModel(path_to_the_model)
+
+## No need for LLM
+An LLM model is not necessary to use this library. With the help of an LLM model, you can better transliterate certain alphabets and explain hits in words etc. You do not need to provide an LLM model for the name matching itself, and the solution runs efficiently with few resources.
+
 ## Bugs & features
 Please report bugs or missed features to: info@asderix.com.
 
 ## License:
 Apache 2.0.
 
+Please see at "Third party libraries" for licenses used by the included third party libraries.
+
 ## Third pary libraries
-Credit to the following third party libraries:
+Credits to the following third party libraries (license):
 - Apache Lucene (Apache 2.0)
 - ICU4J (Unicode-3.0)
 - UPickle (MIT)
+- java-llama.cpp (MIT)

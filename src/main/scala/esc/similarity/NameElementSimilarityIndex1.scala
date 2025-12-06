@@ -1113,7 +1113,7 @@ object NameElementSimilarityIndex1 {
     "euler.muller" -> 0.1,
     "ev.eva" -> 0.99,
     "eva.ewa" -> 0.91,
-    "evtushenkov.jewtuschenkow" -> 0.99,
+    "evtushenkov.jewtuschenkov" -> 0.99,
     "evtushenkov.yevtushenkov" -> 0.99,
     "eyer.meyer" -> 0.1,
     "fabia.fabio" -> 0.1,

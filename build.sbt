@@ -14,13 +14,17 @@ lazy val Esc = (project in file("."))
     scalacOptions ++= Seq(
       "-deprecation",
       "-feature" 
-    ),    
+    ),
+        
+    javaOptions += "--enable-native-access=ALL-UNNAMED",
+
     libraryDependencies += "com.lihaoyi" %% "upickle" % "4.4.1",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     libraryDependencies += "org.apache.lucene" % "lucene-core" % "10.3.2",
     libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "10.3.2",
     libraryDependencies += "org.apache.lucene" % "lucene-analysis-common" % "10.3.2",
-    libraryDependencies += "com.ibm.icu" % "icu4j" % "78.1"
+    libraryDependencies += "com.ibm.icu" % "icu4j" % "78.1",
+    libraryDependencies += "de.kherud" % "llama" % "4.2.0"
   )
 
 assembly / assemblyMergeStrategy := {
@@ -30,4 +34,4 @@ assembly / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
-assembly / assemblyJarName := "EscEntitySimilarityChecker_3.0.0.jar"
+assembly / assemblyJarName := "EscEntitySimilarityChecker_3.1.0.jar"

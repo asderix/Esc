@@ -10,6 +10,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import esc.normalization._
 import esc.similarity._
 import esc.configuration._
+import esc.ai._
 
 /**
   * Test-class for normalization tests.
@@ -103,6 +104,15 @@ import esc.configuration._
    test("Similarity.PersonName.29") {       
        assert(similarity.getPersonNameSimilarity(Transliterator.transToLatin("山田 太郎"), "Shantian Tai Lang").similarity > 0.98)
    }
+   test("Similarity.PersonName.30") {       
+       assert(similarity.getPersonNameSimilarity("Al-Charfawi", "Charafawi").similarity > 0.95)
+   }
+   test("Similarity.PersonName.31") {       
+       assert(similarity.getPersonNameSimilarity("al-hasan", "alhassan").similarity > 0.95)
+   }
+   test("Similarity.PersonName.32") {       
+       assert(similarity.getPersonNameSimilarity("aliev", "alijew").similarity > 0.95)
+   }
 
    // -- Organisation names -- //
    test("Similarity.OrgName.1") {
@@ -149,6 +159,15 @@ import esc.configuration._
     // -- MatchPairs -- //
     test("Similarity.PersonName.200") {
        assert(similarity.getPersonNameSimilarity("Bill Somename", "William Somename").matchPairs.toString() == "List((somename,somename,1.0,stringIdent), (bill,william,0.97,libDb))")
+    }
+
+    // -- AiAgent assessment
+    test("Similarity.AiAgentAssessment.1") {
+       assert(AiAgent.assessMatch(similarity.explainPersonNameSimilarity("William Morgan", "Bill Morgan")))
+    }
+
+    test("Similarity.AiAgentAssessment.2") {
+       assert(AiAgent.assessMatch(similarity.explainPersonNameSimilarity("Heidi Müller", "Daniel Graf")) == false)
     }
  }
 

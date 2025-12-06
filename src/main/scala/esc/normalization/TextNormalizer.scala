@@ -55,20 +55,30 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll("-$", "")
     
     // several name elements that only make sense together and represent one element
-    mutNormString = mutNormString.replaceAll(" von *der ", " vonder ")
     mutNormString = mutNormString.replaceAll("^von *der ", "vonder ")
+    mutNormString = mutNormString.replaceAll(" von *der ", " vonder ")
+    mutNormString = mutNormString.replaceAll(" von *der$", "vonder")
 
-    mutNormString = mutNormString.replaceAll(" von *de ", " vonde ")
     mutNormString = mutNormString.replaceAll("^von *de ", "vonde ")
+    mutNormString = mutNormString.replaceAll(" von *de ", " vonde ")
+    mutNormString = mutNormString.replaceAll(" von *de$", " vonde")
+  
 
-    mutNormString = mutNormString.replaceAll(" van *der ", " vander ")
     mutNormString = mutNormString.replaceAll("^van *der ", "vander ")
+    mutNormString = mutNormString.replaceAll(" van *der ", " vander ")
+    mutNormString = mutNormString.replaceAll(" van *der$", "vander")
 
-    mutNormString = mutNormString.replaceAll(" van *de ", " vande ")
     mutNormString = mutNormString.replaceAll("^van *de ", "vande ")
+    mutNormString = mutNormString.replaceAll(" van *de ", " vande ")
+    mutNormString = mutNormString.replaceAll(" van *de$", " vande")
 
+    mutNormString = mutNormString.replaceAll("^an *der ", "ander ")
+    mutNormString = mutNormString.replaceAll(" an *der ", " ander ")
+    mutNormString = mutNormString.replaceAll(" an *der$", " ander")
+
+    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")  
     mutNormString = mutNormString.replaceAll(" de *la ", " dela ")
-    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")    
+    mutNormString = mutNormString.replaceAll(" de *la$", "dela")    
 
     // Only standard Latin letters and numbers, hyphens and spaces
     mutNormString = regexPattern replaceAllIn (mutNormString, "")
@@ -133,15 +143,30 @@ object TextNormalizer {
   def normalizeNameElement(nameElement: String): String = {
     var mutNormNameElement = nameElement
 
-    // Some standardizations in relation to the Russian
-    mutNormNameElement = mutNormNameElement.replaceAll("witsch${1}", "vic")
-    mutNormNameElement = mutNormNameElement.replaceAll("witsch-{1}", "vic-")
-    mutNormNameElement = mutNormNameElement.replaceAll("vich${1}", "vic")
-    mutNormNameElement = mutNormNameElement.replaceAll("vich-{1}", "vic-")
-    mutNormNameElement = mutNormNameElement.replaceAll("vitch${1}", "vic")
-    mutNormNameElement = mutNormNameElement.replaceAll("vitch-{1}", "vic-")
-    mutNormNameElement = mutNormNameElement.replaceAll("off${1}", "ov")
-    mutNormNameElement = mutNormNameElement.replaceAll("off-{1}", "ov-")
+    // Some standardizations in relation to the Russian and others
+    mutNormNameElement = mutNormNameElement.replaceAll("witsch$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("wjtsch$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("witsj$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("wicz$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("vych$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("vitch$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("off$", "ov")
+    mutNormNameElement = mutNormNameElement.replaceAll("eff$", "ev")
+    mutNormNameElement = mutNormNameElement.replaceAll("ow$", "ov")
+    mutNormNameElement = mutNormNameElement.replaceAll("owna$", "ovna")
+    mutNormNameElement = mutNormNameElement.replaceAll("ew$", "ev")
+    mutNormNameElement = mutNormNameElement.replaceAll("jew$", "ev")
+    mutNormNameElement = mutNormNameElement.replaceAll("schew$", "chev")
+
+    mutNormNameElement = mutNormNameElement.replaceAll("czuk$", "chuk")
+    mutNormNameElement = mutNormNameElement.replaceAll("vets$", "wez")
+
+    mutNormNameElement = mutNormNameElement.replaceAll("sky$", "ski")
+    mutNormNameElement = mutNormNameElement.replaceAll("skij$", "ski")
+    mutNormNameElement = mutNormNameElement.replaceAll("skii$", "ski")
+
+    mutNormNameElement = mutNormNameElement.replaceAll("yuk$", "uk")
+    mutNormNameElement = mutNormNameElement.replaceAll("juk$", "uk")
 
     // Some standardizations in relation to the Chinese
     mutNormNameElement = mutNormNameElement.replaceAll("-tao", "tao")

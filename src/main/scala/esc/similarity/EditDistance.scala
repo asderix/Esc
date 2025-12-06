@@ -141,12 +141,29 @@ object EditDistance {
       case ("m", "n", _) => return 0.5
       case ("n", "m", _) => return 0.5
 
+      case ("k", "q", _) => return 0.5
+      case ("q", "k", _) => return 0.5
+
+      case ("f", "w", _) => return 0.5
+      case ("w", "f", _) => return 0.5
+
+      case ("s", "z", _) => return 0.5
+      case ("z", "s", _) => return 0.5
+
       case ("i", "j", _) => return 0.8
       case ("j", "i", _) => return 0.8
+
       case ("i", "y", _) => return 0.8
       case ("y", "i", _) => return 0.8
+
       case ("y", "j", _) => return 0.8
       case ("j", "y", _) => return 0.8
+
+      case ("w", "v", _) => return 0.8
+      case ("v", "w", _) => return 0.8
+
+      case ("f", "v", _) => return 0.8
+      case ("v", "f", _) => return 0.8
 
       case _ => return 0.0
     }
