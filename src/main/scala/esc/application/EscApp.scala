@@ -16,9 +16,9 @@ import esc.index._
 import java.security.MessageDigest
 import scala.math.{max, min}
 
-/** Main application class. Used for a very simple command line interface (CLI).
+/** Main application function. Used for a very simple command line interface (CLI).
   */
-object EscApp extends App {
+@main def runEscApp(): Unit = {
   println("")
   println(
     "#################################################################################################################"
@@ -27,7 +27,7 @@ object EscApp extends App {
     "# Hello from ESC!                                                                                               #"
   )
   println(
-    "# Version: 3.1.0                                                                                                #"
+    "# Version: 3.2.0                                                                                                #"
   )
   println(
     "# Project website: https://esc.asderix.com                                                                      #"

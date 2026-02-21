@@ -7,4 +7,5 @@
 .metals/*
 .vscode/*
 .bsp/*
+.theia/*
 cs

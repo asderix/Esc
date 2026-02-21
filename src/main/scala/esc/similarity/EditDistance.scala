@@ -75,97 +75,114 @@ object EditDistance {
     *   Text a) for comparison.
     * @param textB
     *   Text b) for comparison.
+    * @param reductionFn
+    *   Optional. Internal function is used as default.
     *
     * @return
     *   Return a Tuple with the edit distande, reduction value an weighted edit
     *   distance.
     */
-  def getEditDistance[A](
-    textA: Iterable[A],
-    textB: Iterable[A]
-  ): (Int, Double, Double) = {
-    var wr: Double = 0.0
-    var lastChar: String = ""
-    val ed = textA.foldLeft((0 to textB.size).toList) { (prev, x) =>
-      (prev zip prev.tail zip textB).scanLeft(prev.head + 1) {
-        case (h, ((d, v), y)) => {
-          min(
-            min(h + 1, v + 1),
-            d + (if (x == y) {
-              if (d == 0) lastChar = x.toString; 0
-            } else {
-              if (d == 0) {
-                wr = wr + getCharReplacmentReduction(
-                  x.toString,
-                  y.toString,
-                  lastChar
-                )
-                lastChar = x.toString
-              }
-              1
-            })
-          )
+  def getEditDistance(
+    textA: Iterable[Char],
+    textB: Iterable[Char],
+    reductionFn: (Char, Char, Option[Char]) => Double = getCharReplacementReduction
+  ): (Double, Double, Double) = {
+
+    val aSeq = textA.toIndexedSeq
+    val bSeq = textB.toIndexedSeq
+
+    var prevRow = (0 to bSeq.size).map(d => (d.toDouble, 0.0)).toVector
+    var prevPrevRow = Vector.fill(bSeq.size + 1)((Double.MaxValue, 0.0))
+
+    def getStepCost(char: Char, prevChar: Option[Char]): Double = {
+      val isOptional = (char == 'e' && prevChar.exists(Set('a', 'o', 'u', 'i').contains)) ||
+                      (char == 'h' && prevChar.exists(Set('t', 'r', 'l', 'n', 'p', 'c').contains)) ||
+                      (char == 'j' && prevChar.exists(Set('i', 'y').contains)) ||                      
+                      (char == 's' && prevChar.contains('t')) ||
+                      (prevChar.contains(char))
+      if (isOptional) 0.2 else 1.0
+    }
+
+    for (i <- 1 to aSeq.size) {
+      val charA = aSeq(i - 1)
+      val optPrevA = if (i > 1) Some(aSeq(i - 2)) else None
+      
+      val firstColCost = getStepCost(charA, optPrevA)
+      var currentRow = Vector((prevRow(0)._1 + firstColCost, prevRow(0)._2 + (1.0 - firstColCost)))
+
+      for (j <- 1 to bSeq.size) {
+        val charB = bSeq(j - 1)
+        val optPrevB = if (j > 1) Some(bSeq(j - 2)) else None
+
+        if (charA == charB) {
+          currentRow = currentRow :+ prevRow(j - 1)
+        } else {
+          // Substitution:
+          val red = reductionFn(charA, charB, optPrevA)
+          val subDist = prevRow(j - 1)._1 + (1.0 - red)
+          val subRed  = prevRow(j - 1)._2 + red
+
+          // Insertion:
+          val insStep = if (optPrevB.contains(charB)) 0.1 else getStepCost(charB, optPrevB)
+          val insDist = currentRow(j - 1)._1 + insStep
+          val insRed  = currentRow(j - 1)._2 + (1.0 - insStep)
+
+          // Deletion:
+          val delStep = if (optPrevA.contains(charA)) 0.1 else getStepCost(charA, optPrevA)
+          val delDist = prevRow(j)._1 + delStep
+          val delRed  = prevRow(j)._2 + (1.0 - delStep)
+
+          // Choose option:
+          var (minDist, finalRed) = 
+            if (subDist <= insDist && subDist <= delDist) (subDist, subRed)
+            else if (insDist <= delDist) (insDist, insRed)
+            else (delDist, delRed)
+
+          // Transposition:
+          if (i > 1 && j > 1 && charA == bSeq(j - 2) && charB == aSeq(i - 2)) {
+            val transDist = prevPrevRow(j - 2)._1 + 0.5
+            if (transDist < minDist) {
+              minDist = transDist
+              finalRed = prevPrevRow(j - 2)._2 + 0.5
+            }
+          }
+
+          currentRow = currentRow :+ (minDist, finalRed)
         }
       }
-    } last
+      prevPrevRow = prevRow
+      prevRow = currentRow
+    }
 
-    (ed, wr, ed - wr)
+    val (weightedDist, totalRed) = prevRow.last
+    (weightedDist + totalRed, totalRed, weightedDist)
   }
 
-  // ---
-  private def getCharReplacmentReduction(
-      charA: String,
-      charB: String,
-      charL: String
+  private def getCharReplacementReduction(
+    charA: Char,
+    charB: Char,
+    charL: Option[Char]
   ): Double = {
-    val pair = (charA, charB, charL)
-    pair match {
-      case ("e", _, "a") => return 0.5
-      case (_, "e", "a") => return 0.5
+    (charA, charB) match {
+      case ('p', 'f') | ('f', 'p') | 
+          ('c', 'k') | ('k', 'c') |
+          ('z', 't') | ('t', 'z') => 0.9
 
-      case ("e", _, "o") => return 0.5
-      case (_, "e", "o") => return 0.5
+      case ('s', 'z') | ('z', 's') |
+          ('i', 'y') | ('y', 'i') |
+          ('i', 'j') | ('j', 'i') |
+          ('j', 'y') | ('y', 'j') |
+          ('m', 'n') | ('n', 'm') |
+          ('v', 'f') | ('f', 'v') |
+          ('v', 'w') | ('w', 'v') => 0.8
 
-      case ("e", _, "u") => return 0.5
-      case (_, "e", "u") => return 0.5
-
-      case (_, "h", "t") => return 0.5
-      case ("h", _, "t") => return 0.5
-
-      case (_, "z", "t") => return 0.5
-      case ("z", _, "t") => return 0.5
-
-      case ("c", "k", _) => return 0.5
-      case ("k", "c", _) => return 0.5
-
-      case ("m", "n", _) => return 0.5
-      case ("n", "m", _) => return 0.5
-
-      case ("k", "q", _) => return 0.5
-      case ("q", "k", _) => return 0.5
-
-      case ("f", "w", _) => return 0.5
-      case ("w", "f", _) => return 0.5
-
-      case ("s", "z", _) => return 0.5
-      case ("z", "s", _) => return 0.5
-
-      case ("i", "j", _) => return 0.8
-      case ("j", "i", _) => return 0.8
-
-      case ("i", "y", _) => return 0.8
-      case ("y", "i", _) => return 0.8
-
-      case ("y", "j", _) => return 0.8
-      case ("j", "y", _) => return 0.8
-
-      case ("w", "v", _) => return 0.8
-      case ("v", "w", _) => return 0.8
-
-      case ("f", "v", _) => return 0.8
-      case ("v", "f", _) => return 0.8
-
-      case _ => return 0.0
+      case ('0', 'o') | ('o', '0') | 
+          ('1', 'l') | ('l', '1') |
+          ('2', 'z') | ('z', '2') |
+          ('5', 's') | ('s', '5') |
+          ('8', 'b') | ('b', '8') => 0.8
+      
+      case _ => 0.0
     }
   }
 }

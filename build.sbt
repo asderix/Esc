@@ -6,7 +6,7 @@ ThisBuild / homepage := Some(url("https://esc.asderix.com/"))
 ThisBuild / developers := List(
   Developer("ronnyfuchs", "Ronny Fuchs", "info@asderix.com", url("http://esc.asderix.com"))
 )
-ThisBuild / scalaVersion := "3.7.4"
+ThisBuild / scalaVersion := "3.8.1"
 
 lazy val Esc = (project in file("."))
   .settings(
@@ -18,12 +18,12 @@ lazy val Esc = (project in file("."))
         
     javaOptions += "--enable-native-access=ALL-UNNAMED",
 
-    libraryDependencies += "com.lihaoyi" %% "upickle" % "4.4.1",
+    libraryDependencies += "com.lihaoyi" %% "upickle" % "4.4.3",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test",
     libraryDependencies += "org.apache.lucene" % "lucene-core" % "10.3.2",
     libraryDependencies += "org.apache.lucene" % "lucene-queryparser" % "10.3.2",
     libraryDependencies += "org.apache.lucene" % "lucene-analysis-common" % "10.3.2",
-    libraryDependencies += "com.ibm.icu" % "icu4j" % "78.1",
+    libraryDependencies += "com.ibm.icu" % "icu4j" % "78.2",
     libraryDependencies += "de.kherud" % "llama" % "4.2.0"
   )
 
@@ -34,4 +34,6 @@ assembly / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
-assembly / assemblyJarName := "EscEntitySimilarityChecker_3.1.0.jar"
+Test / fork := true
+
+assembly / assemblyJarName := "EscEntitySimilarityChecker_3.2.0.jar"

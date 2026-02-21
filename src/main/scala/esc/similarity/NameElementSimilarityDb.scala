@@ -160,7 +160,10 @@ object nameElementSimilarityDb {
   }
 
   private val nameElementSimilarities =
-    NameElementSimilarityIndex1.nameElementSimilarities ++ NameElementSimilarityIndex2.nameElementSimilarities
+    NameElementSimilarityIndex1.nameElementSimilarities ++ NameElementSimilarityIndex2.nameElementSimilarities ++ 
+    NameElementSimilarityIndex3.nameElementSimilarities ++ NameElementSimilarityIndex4.nameElementSimilarities ++
+    NameElementSimilarityIndex5.nameElementSimilarities ++ NameElementSimilarityIndex6.nameElementSimilarities ++
+    NameElementSimilarityIndex7.nameElementSimilarities ++ NameElementSimilarityIndex8.nameElementSimilarities
 
   private val mutOwnNameElementSimilarities = mutable.Map[String, Double]()
 }

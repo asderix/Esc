@@ -19,7 +19,6 @@ object TextNormalizer {
     *   Return the normalized String.
     */
   def normalize(text: String): String = {
-    //val regexPattern = "[^abcdefghijklmnopqrstuvwxyz0123456789 -]".r
     val regexPattern = "[^\\p{L}0-9 \\-]".r
 
     // Normalized in NFKD form (decomposition), compatibily mode, in lower case letters
@@ -35,13 +34,16 @@ object TextNormalizer {
     mutNormString = mutNormString.replace("¢", "c")    
     mutNormString = mutNormString.replace("ə", "a")
     mutNormString = mutNormString.replace("ı", "i")
+    mutNormString = mutNormString.replace("ł", "l") // Sometimes w, but more often l, as in: Łukasz
+    mutNormString = mutNormString.replace("θ", "th")
+    mutNormString = mutNormString.replace("ʼ", "")
 
     // Arabic chars from transliteration
     mutNormString = mutNormString.replace("ʿbd", "abd")
     mutNormString = mutNormString.replace("ʿly", "ali")
     
     // Special characters that are relevant for the name comparison
-    mutNormString = mutNormString.replace("&", "plus")
+    mutNormString = mutNormString.replace("&", "and")
     mutNormString = mutNormString.replace("+", "plus")
     mutNormString = mutNormString.replace("@", "at")
     mutNormString = mutNormString.replace("\n", " ")
@@ -57,16 +59,15 @@ object TextNormalizer {
     // several name elements that only make sense together and represent one element
     mutNormString = mutNormString.replaceAll("^von *der ", "vonder ")
     mutNormString = mutNormString.replaceAll(" von *der ", " vonder ")
-    mutNormString = mutNormString.replaceAll(" von *der$", "vonder")
+    mutNormString = mutNormString.replaceAll(" von *der$", " vonder")
 
     mutNormString = mutNormString.replaceAll("^von *de ", "vonde ")
     mutNormString = mutNormString.replaceAll(" von *de ", " vonde ")
     mutNormString = mutNormString.replaceAll(" von *de$", " vonde")
-  
 
     mutNormString = mutNormString.replaceAll("^van *der ", "vander ")
     mutNormString = mutNormString.replaceAll(" van *der ", " vander ")
-    mutNormString = mutNormString.replaceAll(" van *der$", "vander")
+    mutNormString = mutNormString.replaceAll(" van *der$", " vander")
 
     mutNormString = mutNormString.replaceAll("^van *de ", "vande ")
     mutNormString = mutNormString.replaceAll(" van *de ", " vande ")
@@ -78,9 +79,35 @@ object TextNormalizer {
 
     mutNormString = mutNormString.replaceAll("^de *la ", "dela ")  
     mutNormString = mutNormString.replaceAll(" de *la ", " dela ")
-    mutNormString = mutNormString.replaceAll(" de *la$", "dela")    
+    mutNormString = mutNormString.replaceAll(" de *la$", " dela")
 
-    // Only standard Latin letters and numbers, hyphens and spaces
+    mutNormString = mutNormString.replaceAll("^de *los ", "delos ")  
+    mutNormString = mutNormString.replaceAll(" de *los ", " delos ")
+    mutNormString = mutNormString.replaceAll(" de *los$", " delos")
+
+    mutNormString = mutNormString.replaceAll("^ad-din ", "addin ")  
+    mutNormString = mutNormString.replaceAll(" ad-din ", " addin ")
+    mutNormString = mutNormString.replaceAll(" ad-din$", " addin")
+
+    mutNormString = mutNormString.replaceAll("^al-din ", "aldin ")  
+    mutNormString = mutNormString.replaceAll(" al-din ", " aldin ")
+    mutNormString = mutNormString.replaceAll(" al-din$", " aldin")
+
+    // Only standard alphabets letters and numbers, hyphens and spaces
+    mutNormString = regexPattern replaceAllIn (mutNormString, "")
+    mutNormString.trim
+  }
+
+  /** Deletes all whitespaces and hypthens (" ", "-") in a text.
+    *
+    * @param text
+    *   The string, e.g. a full name, to normalize.
+    * @return
+    *   Return a normalized String.
+    */
+  def normalizeForSimpleSimilarity(text: String): String = {
+    val regexPattern = "[ \\-]+".r
+    var mutNormString = normalize(text)
     mutNormString = regexPattern replaceAllIn (mutNormString, "")
     mutNormString.trim
   }
@@ -98,36 +125,36 @@ object TextNormalizer {
     var mutNormString = normalize(text)
 
     // Compact common legal forms
-    mutNormString = mutNormString.replace("gmbh *and *co *kg", "gmbh_and_co_kg")
+    mutNormString = mutNormString.replaceAll("\\bgmbh *and *co *kg\\b", "gmbh_and_co_kg")
     mutNormString =
-      mutNormString.replace("gmbh *and *co *ohg", "gmbh_and_co_ohg")
+      mutNormString.replaceAll("\\bgmbh *and *co *ohg\\b", "gmbh_and_co_ohg")
     mutNormString =
-      mutNormString.replace("gmbh *and *co *kgaa", "gmbh_and_co_kgaa")
+      mutNormString.replaceAll("\\bgmbh *and *co *kgaa\\b", "gmbh_and_co_kgaa")
 
-    mutNormString = mutNormString.replace("ohg *mbh", "ohg_mbh")
+    mutNormString = mutNormString.replaceAll("\\bohg *mbh\\b", "ohg_mbh")
 
-    mutNormString = mutNormString.replace("ag *and *co *ohg", "ag_and_co_ohg")
-    mutNormString = mutNormString.replace("ag *and *co *kgaa", "ag_and_co_kgaa")
-    mutNormString = mutNormString.replace("ag *and *co *kg", "ag_and_co_kg")
+    mutNormString = mutNormString.replaceAll("\\bag *and *co *ohg\\b", "ag_and_co_ohg")
+    mutNormString = mutNormString.replaceAll("\\bag *and *co *kgaa\\b", "ag_and_co_kgaa")
+    mutNormString = mutNormString.replaceAll("\\bag *and *co *kg\\b", "ag_and_co_kg")
 
     mutNormString =
-      mutNormString.replace("stiftung *and *co *kgaa", "stiftung_and_co_gkaa")
+      mutNormString.replaceAll("\\bstiftung *and *co *kgaa\\b", "stiftung_and_co_gkaa")
 
-    mutNormString = mutNormString.replace("co-operative", "cooperative")
+    mutNormString = mutNormString.replace("\\bco-operative\\b", "cooperative")
     mutNormString =
-      mutNormString.replace("societe *cooperative", "societe_cooperative")
+      mutNormString.replaceAll("\\bsociete *cooperative\\b", "societe_cooperative")
     mutNormString =
-      mutNormString.replace("societa *cooperativa", "societa_cooperativa")
+      mutNormString.replaceAll("\\bsocieta *cooperativa\\b", "societa_cooperativa")
 
-    mutNormString = mutNormString.replace("company *limited", "lc")
-    mutNormString = mutNormString.replace("company *ltd", "lc")
-    mutNormString = mutNormString.replace("limited *company", "lc")
-    mutNormString = mutNormString.replace("public *limited *company", "plc")
-    mutNormString = mutNormString.replace("company *corp", "corp")
-    mutNormString = mutNormString.replace("unlimited *company", "uc")
-    mutNormString = mutNormString.replace("incorporated company", "inc")
+    mutNormString = mutNormString.replaceAll("\\bcompany *limited\\b", "lc")
+    mutNormString = mutNormString.replaceAll("\\bcompany *ltd\\b", "lc")
+    mutNormString = mutNormString.replaceAll("\\blimited *company\\b", "lc")
+    mutNormString = mutNormString.replaceAll("\\bpublic *limited *company\\b", "plc")
+    mutNormString = mutNormString.replaceAll("\\bcompany *corp\\b", "corp")
+    mutNormString = mutNormString.replaceAll("\\bunlimited *company\\b", "uc")
+    mutNormString = mutNormString.replaceAll("\\bincorporated *company\\b", "inc")
 
-    mutNormString = mutNormString.replace("( *a o)$", "ao")
+    mutNormString = mutNormString.replaceAll("\\b( *a o)\\b", "ao")
 
     mutNormString
   }
@@ -148,6 +175,7 @@ object TextNormalizer {
     mutNormNameElement = mutNormNameElement.replaceAll("wjtsch$", "vich")
     mutNormNameElement = mutNormNameElement.replaceAll("witsj$", "vich")
     mutNormNameElement = mutNormNameElement.replaceAll("wicz$", "vich")
+    mutNormNameElement = mutNormNameElement.replaceAll("witz$", "vitz") //
     mutNormNameElement = mutNormNameElement.replaceAll("vych$", "vich")
     mutNormNameElement = mutNormNameElement.replaceAll("vitch$", "vich")
     mutNormNameElement = mutNormNameElement.replaceAll("off$", "ov")
@@ -155,21 +183,21 @@ object TextNormalizer {
     mutNormNameElement = mutNormNameElement.replaceAll("ow$", "ov")
     mutNormNameElement = mutNormNameElement.replaceAll("owna$", "ovna")
     mutNormNameElement = mutNormNameElement.replaceAll("ew$", "ev")
+    mutNormNameElement = mutNormNameElement.replaceAll("aw$", "av")
     mutNormNameElement = mutNormNameElement.replaceAll("jew$", "ev")
     mutNormNameElement = mutNormNameElement.replaceAll("schew$", "chev")
+    mutNormNameElement = mutNormNameElement.replaceAll("wa$", "va")
 
     mutNormNameElement = mutNormNameElement.replaceAll("czuk$", "chuk")
     mutNormNameElement = mutNormNameElement.replaceAll("vets$", "wez")
 
-    mutNormNameElement = mutNormNameElement.replaceAll("sky$", "ski")
-    mutNormNameElement = mutNormNameElement.replaceAll("skij$", "ski")
-    mutNormNameElement = mutNormNameElement.replaceAll("skii$", "ski")
-
     mutNormNameElement = mutNormNameElement.replaceAll("yuk$", "uk")
     mutNormNameElement = mutNormNameElement.replaceAll("juk$", "uk")
 
+    mutNormNameElement = mutNormNameElement.replaceAll("yova$", "ova")
+
     // Some standardizations in relation to the Chinese
-    mutNormNameElement = mutNormNameElement.replaceAll("-tao", "tao")
+    mutNormNameElement = mutNormNameElement.replaceAll("-tao$", "tao")
 
     mutNormNameElement
   }

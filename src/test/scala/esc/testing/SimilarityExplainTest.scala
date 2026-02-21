@@ -17,7 +17,8 @@ import esc.ai._
 /**
   * Test-class for explain function tests.
   */    
- class SimilarityExplainTest extends AnyFunSuite {   
+ class SimilarityExplainTest extends AnyFunSuite {  
+   TestEnv.init() 
    val similarity = new NameSimilarity  
    val similarity2 = new NameSimilarity(SimilarityConfig().copy(allowOneLetterAbbreviation = true))
 

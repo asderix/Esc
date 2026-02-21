@@ -21,8 +21,8 @@ class NameSimilarity(
     val similarityConfig: SimilarityConfig = new SimilarityConfig()
 ) {
 
-  /** Standard method to calculate the simialrity of two person names. It
-    * returns a Match object that provides various key figures to match.
+  /** Standard method to calculate the similarity of two person names. It
+    * returns a Match object that provides various key figures about the match.
     *
     * @param nameA
     *   Name a) as a full name.
@@ -348,11 +348,28 @@ class NameSimilarity(
       }
     }
 
-    similarityConfig.matchSelectionMode match {
-      case 0 => mutMatchList.sortBy(_.similarity).reverse.head
-      case 1 => mutMatchList.sortBy(_.nofHits).reverse.head
-      case _ => mutMatchList.sortBy(_.similarity).reverse.head
+    val bestMatch = similarityConfig.matchSelectionMode match {
+      case 1 => mutMatchList.maxByOption(_.nofHits)
+      case _ => mutMatchList.maxByOption(_.similarity)
     }
+
+    bestMatch match {
+      case Some(m) if m.similarity >= similarityConfig.similarityValueForSearchHit => 
+        m 
+
+      case Some(m) => 
+        val normA = TextNormalizer.normalizeForSimpleSimilarity(normNameA.sourceName)
+        val normB = TextNormalizer.normalizeForSimpleSimilarity(normNameB.sourceName)
+        
+        if (normA == normB) {
+          Match(1, 1.0, 1, 1.0, 0.99, List((normNameA.sourceName, normNameB.sourceName, 0.99, "StringIdentWithoutSeperator")))
+        } else {
+          m
+        }
+        
+      case _ => 
+        Match(0, 0.0, 0, 0.0, 0.0, List())
+    } 
   }
 
   // ---

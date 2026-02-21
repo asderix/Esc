@@ -85,9 +85,10 @@ class NameNormalizer(
       .split(" ")
       .map(e => TextNormalizer.normalizeNameElement(e))
       .toVector
-
+      
+    val minLength = if (whitespaceSplit.exists(_.toDeLegalForm._1)) 3 else 2
     whitespaceSplit.length match {
-      case x if x > 2 =>
+      case x if x > minLength =>
         buildWhitespaceVariations(
           whitespaceSplit,
           mutWhitespaceVariations,
@@ -154,6 +155,10 @@ class NameNormalizer(
       case "dos"    => reducedWeight = initialWeight - 0.8; isReduced = true
       case "dr"     => reducedWeight = initialWeight - 0.8; isReduced = true
       case "prof"   => reducedWeight = initialWeight - 0.8; isReduced = true
+      case "dela"   => reducedWeight = initialWeight - 0.5; isReduced = true
+      case "la"     => reducedWeight = initialWeight - 0.5; isReduced = true
+      case "des"    => reducedWeight = initialWeight - 0.5; isReduced = true
+      case "delos"  => reducedWeight = initialWeight - 0.5; isReduced = true
       case _ => {
         nameElement.length match {
           case 1 =>

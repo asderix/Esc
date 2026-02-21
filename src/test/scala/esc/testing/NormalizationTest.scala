@@ -14,8 +14,7 @@ import esc.ai._
 /** Test-class for normalization tests.
   */
 class NormalizationTest extends AnyFunSuite {
-  AiAgent.loadModel(Paths.get("../models/Mistral-Small-3.2-24B-Instruct-2506-Q4_0.gguf").toAbsolutePath.normalize().toString)  
-  
+  TestEnv.init()
   // -- Names -- //
   val normalizer = new NameNormalizer
   test("Normalization.PersonName.1") {

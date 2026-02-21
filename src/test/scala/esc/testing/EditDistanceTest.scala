@@ -20,7 +20,7 @@ import esc.similarity._
      assert(EditDistance.getEditDistanceSimilarity("Zumhofen", "Zumhofen") == 1.0)
    }
    test("EditDistance.AddLetters.1") {          
-     assert(EditDistance.getEditDistanceSimilarity("muller", "mueller") == 0.9642857142857143)
+     assert(EditDistance.getEditDistanceSimilarity("muller", "mueller") == 0.9857142857142858)
    }
    test("EditDistance.AddLetters.2") {          
      assert(EditDistance.getEditDistanceSimilarity("meier", "meiers") == 0.9166666666666667)
@@ -32,22 +32,25 @@ import esc.similarity._
      assert(EditDistance.getEditDistanceSimilarity("ab", "abc") == 0.7777777777777778)
    }
    test("EditDistance.AddLetters.5") {          
-     assert(EditDistance.getEditDistanceSimilarity("thomas", "tomas") == 0.9583333333333333)
+     assert(EditDistance.getEditDistanceSimilarity("thomas", "tomas") == 0.9833333333333334)
    }
    test("EditDistance.AddLetters.6") {          
-     assert(EditDistance.getEditDistanceSimilarity("jakob", "jackob") == 0.9583333333333333)
+     assert(EditDistance.getEditDistanceSimilarity("jakob", "jackob") == 0.9166666666666667)
+   }
+   test("EditDistance.AddLetters.7") {          
+     assert(EditDistance.getEditDistanceSimilarity("Hallo", "Halloh") == 0.9166666666666667)
    }
    test("EditDistance.WrongLetters.1") {          
      assert(EditDistance.getEditDistanceSimilarity("Meier", "Meyer") == 0.976)
    }
    test("EditDistance.WrongLetters.2") {          
-     assert(EditDistance.getEditDistanceSimilarity("claudia", "klaudia") == 0.9571428571428572)
+     assert(EditDistance.getEditDistanceSimilarity("claudia", "klaudia") == 0.9914285714285714)
    }
    test("EditDistance.WrongLetters.3") {          
-     assert(EditDistance.getEditDistanceSimilarity("Stephan", "Steffan") == 0.7959183673469388)
+     assert(EditDistance.getEditDistanceSimilarity("Stephan", "Steffan") == 0.9657142857142857)
    }
    test("EditDistance.WrongLetters.4") {          
-     assert(EditDistance.getEditDistanceSimilarity("roni", "romi") == 0.925)
+     assert(EditDistance.getEditDistanceSimilarity("roni", "romi") == 0.97)
    }
    test("EditDistance.WrongAndAddLetters.1") {          
      assert(EditDistance.getEditDistanceSimilarity("Meier", "Meyers") == 0.8500000000000001)

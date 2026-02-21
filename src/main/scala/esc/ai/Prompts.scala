@@ -6,7 +6,7 @@
 
 package esc.ai
 
-object Prompts {
+object Prompts:
     val describeMatchTemplate: String =
     """Describe the similarity of this two names:
       |{NAME_PAIR}    
@@ -44,4 +44,3 @@ object Prompts {
     Input: {TEXT}
     Output: 
       """.stripMargin
-}

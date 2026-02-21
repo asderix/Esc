@@ -10,14 +10,25 @@ import de.kherud.llama._
 import java.nio.file.Paths
 import esc.configuration._
 
-object LMRunner {
+trait LMRunner:
+    def aiConfig: AiConfig
+    def changeAiConfig(newAiConfig: AiConfig): Unit
+    def loadModel(path: String): Unit
+    def prompt(prompt: String, maxTokens: Option[Int] = None): String
+
+/**
+* Default local LMRunner. Need a llama.cpp compatible LLM model
+* like GGUF.
+*
+*/
+object LocalLMRunner extends LMRunner:
     private var isLoaded: Boolean = false
     private var lmModel: Option[LlamaModel] = None
 
     private var modelPath: String = ""
     private var _aiConfig: AiConfig = new AiConfig()
     
-    def aiConfig: AiConfig = _aiConfig
+    override def aiConfig: AiConfig = _aiConfig
 
     /**
     * Set a new AiConfig to the object.
@@ -25,12 +36,10 @@ object LMRunner {
     * and the model path ist still set.
     *
     */
-    def changeAiConfig(newAiConfig: AiConfig) = {
+    override def changeAiConfig(newAiConfig: AiConfig): Unit =
         _aiConfig = newAiConfig
-        if (isLoaded && modelPath.nonEmpty) {
+        if isLoaded && modelPath.nonEmpty then
             loadModel(modelPath)
-        }
-    }
 
     /**
     * Load the model by the given path.
@@ -38,7 +47,8 @@ object LMRunner {
     * Most likely models in the GGUF format.
     *
     */
-    def loadModel(path: String) = synchronized {
+    override def loadModel(path: String): Unit = synchronized:
+        close()
         modelPath = path
         val p = ModelParameters()
         p.setModel(Paths.get(path).toString)
@@ -51,7 +61,6 @@ object LMRunner {
         val m = new LlamaModel(p)
         lmModel = Some(m)
         isLoaded = true
-    }
 
     /**
     * Execute the given text prompt with the LLM model.
@@ -59,15 +68,14 @@ object LMRunner {
     * @param maxTokens
     *  Default is None and the value from the AiConfig is used.
     */
-    def prompt(prompt: String, maxTokens: Option[Int] = None): String = synchronized {
+    override def prompt(prompt: String, maxTokens: Option[Int] = None): String = synchronized:
         require(isLoaded && lmModel.isDefined, "Model not loaded. First load the model via loadModel(path)")
         val inferParams = createInferenceParams(prompt, maxTokens)
         val result = lmModel.get.complete(inferParams)
         result
-    }
 
     // --
-    private def createInferenceParams(prompt: String, maxTokens: Option[Int] = None): InferenceParameters = {
+    private def createInferenceParams(prompt: String, maxTokens: Option[Int] = None): InferenceParameters =
         val p = new InferenceParameters(prompt)
         p.setTemperature(aiConfig.inferenceTemperature)
         p.setTopK(aiConfig.inferenceTopK)
@@ -79,12 +87,33 @@ object LMRunner {
         p.setFrequencyPenalty(aiConfig.inferenceFrequencyPenalty)
         p.setStopStrings(aiConfig.inferenceStopList*)
         p
-    }
 
     // --
-    private def close(): Unit = synchronized {
+    private def close(): Unit = synchronized:
         lmModel.foreach(_.close())
         lmModel = None
         isLoaded = false
-    }
-}
+        
+/**
+* Management service for the LLM runner instances. Use this
+* service to change the LLM runner if needed.
+* The AiAgent object uses this service for LLM inference calls.
+*
+*/
+object LMRunnerService extends LMRunner:
+    @volatile private var lmRunner: LMRunner = LocalLMRunner
+
+    def setLMRunner(newLMRunner: LMRunner): Unit = synchronized:
+        lmRunner = newLMRunner
+
+    override def aiConfig: AiConfig =
+        lmRunner.aiConfig
+
+    override def changeAiConfig(newAiConfig: AiConfig): Unit =
+        lmRunner.changeAiConfig(newAiConfig)
+
+    override def loadModel(path: String): Unit = synchronized:
+        lmRunner.loadModel(path)
+
+    override def prompt(prompt: String, maxTokens: Option[Int] = None): String = synchronized:
+        lmRunner.prompt(prompt, maxTokens)

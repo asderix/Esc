@@ -30,7 +30,7 @@ object Countries {
   // ---
   private val countries = Map(
               "ac" -> "ac", "ascension" -> "ac", "asc" -> "ac",
-              "ad" -> "ad", "andorra" -> "ad", "andorre" -> "ad", "principat d'andorra" -> "ad", "and" -> "ad",
+              "ad" -> "ad", "andorra" -> "ad", "andorre" -> "ad", "principat d'andorra" -> "ad",
               "ae" -> "ae", "vereinigte arabische emirate" -> "ae", "vereinigtearabischeemirate" -> "ae", "emirati arabi uniti" -> "ae", "emiratiarabiuniti" -> "ae", "united arab emirates" -> "ae", "unitedarabemirates" -> "ae", "emirats arabes unis" -> "ae", "emiratsarabesunis" -> "ae", "are" -> "ae", "uae" -> "ae",
               "af" -> "af", "afghanistan" -> "af", "afg" -> "af",
               "ag" -> "ag", "antigua und barbuda" -> "ag", "antiguaundbarbuda" -> "ag", "antigua e barbuda" -> "ag", "antiguaebarbuda" -> "ag", "antigua and barbuda" -> "ag", "antiguaandbarbuda" -> "ag", "antigua-et-barbuda" -> "ag", "antiguaetbarbuda" -> "ag", "atg" -> "ag", "ant" -> "ag",

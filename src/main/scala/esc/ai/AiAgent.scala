@@ -10,12 +10,12 @@ import esc.commons._
 import esc.configuration._
 import esc.utils.Persistence._
 
-object AiAgent {
+object AiAgent:
 
     private def fillTemplate(template: String, values: Map[String, String]): String =
-        values.foldLeft(template) { case (acc, (key, value)) =>
-            acc.replace(s"{$key}", value)
-    }
+        values.foldLeft(template):
+            case (acc, (key, value)) =>
+                acc.replace(s"{$key}", value)
 
     /**
     * Experimental!
@@ -27,20 +27,28 @@ object AiAgent {
     *  message directly to a end user with a different language.
     *
     */
-    def explainMatch(matchExpl: MatchExplanation, userLang: String = "English"): String = {
-        val prompt = if (matchExpl.similarity < LMRunner.aiConfig.agentSimilarityThresholdForHitToExplain) {
-            fillTemplate(Prompts.translateTextTemplate,
-                Map("TEXT" -> s"According to the name matching algorithm, this is not a match. The similarity is less than: ${LMRunner.aiConfig.agentSimilarityThresholdForHitToExplain}",
-                    "USER_LANG" -> userLang))
-        } else {
-                fillTemplate(Prompts.describeMatchTemplate,
-                Map("NAME_PAIR" -> s"$matchExpl.sourceNameA,$matchExpl.sourceNameB",
-                    "USER_LANG" -> userLang))
-        }
-        
-        val result = LMRunner.prompt(prompt)
+    def explainMatch(matchExpl: MatchExplanation, userLang: String = "English"): String =
+        val prompt =
+            if matchExpl.similarity < LMRunnerService.aiConfig.agentSimilarityThresholdForHitToExplain then
+                fillTemplate(
+                    Prompts.translateTextTemplate,
+                    Map(
+                        "TEXT" ->
+                        s"According to the name matching algorithm, this is not a match. The similarity is less than: ${LMRunnerService.aiConfig.agentSimilarityThresholdForHitToExplain}",
+                        "USER_LANG" -> userLang
+                    )
+                )
+            else
+                fillTemplate(
+                    Prompts.describeMatchTemplate,
+                    Map(
+                        "NAME_PAIR" -> s"${matchExpl.sourceNameA},${matchExpl.sourceNameB}",
+                        "USER_LANG" -> userLang
+                    )
+                )
+
+        val result = LMRunnerService.prompt(prompt)
         result
-    }
 
     /**
     * This is very experimental!
@@ -49,12 +57,11 @@ object AiAgent {
     * without verification.
     *
     */
-    def assessMatch(matchExpl: MatchExplanation): Boolean = {
+    def assessMatch(matchExpl: MatchExplanation): Boolean =
         val prompt = fillTemplate(Prompts.assessMatchTemplate,
                 Map("NAME_PAIR" -> s"name A: [ ${matchExpl.sourceNameA} ] and name B: [ ${matchExpl.sourceNameB} ]"))
-        val result = LMRunner.prompt(prompt, Some(128))
+        val result = LMRunnerService.prompt(prompt, Some(128))
         result.toLowerCase.contains("yes")
-    }
 
     /**
     * Transliterate or transcript a given text into the latein alphabet
@@ -63,29 +70,25 @@ object AiAgent {
     * transcription with the ICU library.
     *
     */
-    def transToLatin(text: String): String = {
+    def transToLatin(text: String): String =
         val prompt = fillTemplate(Prompts.transliterateTemplate,
                 Map("TEXT" -> text))
         
-        val result = LMRunner.prompt(prompt, Some(50))
+        val result = LMRunnerService.prompt(prompt, Some(50))
         result.trim
-    }
 
     /**
-    * Just call loadModel of LMRunner. It's sugar for you
-    * not to use LMRunner directly.
+    * Just call loadModel of LMRunnerService. It's sugar for you
+    * not to use LMRunnerService directly.
     *
     */
-    def loadModel(path: String) = synchronized {
-        LMRunner.loadModel(path)
-    }
+    def loadModel(path: String): Unit = synchronized:
+        LMRunnerService.loadModel(path)
 
     /**
-    * Just call changeAiConfig of LMRunner. It's sugar for you
-    * not to use LMRunner directly.
+    * Just call changeAiConfig of LMRunnerService. It's sugar for you
+    * not to use LMRunnerService directly.
     *
     */
-    def changeAiConfig(newAiConfig: AiConfig) = {
-        LMRunner.changeAiConfig(newAiConfig)
-    }        
-}
+    def changeAiConfig(newAiConfig: AiConfig): Unit =
+        LMRunnerService.changeAiConfig(newAiConfig)
