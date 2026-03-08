@@ -27,7 +27,7 @@ import scala.math.{max, min}
     "# Hello from ESC!                                                                                               #"
   )
   println(
-    "# Version: 3.2.0                                                                                                #"
+    "# Version: 3.3.0                                                                                                #"
   )
   println(
     "# Project website: https://esc.asderix.com                                                                      #"

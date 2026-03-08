@@ -26,22 +26,28 @@ object TextNormalizer {
       .normalize(text, Normalizer.Form.NFKD)
       .toLowerCase(Locale.ENGLISH)
 
+    // Standardize whitespaces
+    mutNormString = mutNormString.replaceAll("[\\u00A0\\u202F\\u2007]", " ")
+
     // Relevant special characters from the extended Latin alphabet which have no decomposition in the NFKD form
     mutNormString = mutNormString.replace("ø", "o")
     mutNormString = mutNormString.replace("œ", "oe")
     mutNormString = mutNormString.replace("ß", "ss")
     mutNormString = mutNormString.replace("æ", "ae")
-    mutNormString = mutNormString.replace("¢", "c")    
+    mutNormString = mutNormString.replace("¢", "c")
     mutNormString = mutNormString.replace("ə", "a")
     mutNormString = mutNormString.replace("ı", "i")
-    mutNormString = mutNormString.replace("ł", "l") // Sometimes w, but more often l, as in: Łukasz
+    mutNormString = mutNormString.replace(
+      "ł",
+      "l"
+    ) // Sometimes w, but more often l, as in: Łukasz
     mutNormString = mutNormString.replace("θ", "th")
     mutNormString = mutNormString.replace("ʼ", "")
 
     // Arabic chars from transliteration
     mutNormString = mutNormString.replace("ʿbd", "abd")
     mutNormString = mutNormString.replace("ʿly", "ali")
-    
+
     // Special characters that are relevant for the name comparison
     mutNormString = mutNormString.replace("&", "and")
     mutNormString = mutNormString.replace("+", "plus")
@@ -55,7 +61,7 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll(" *- *", "-")
     mutNormString = mutNormString.replaceAll("^-", "")
     mutNormString = mutNormString.replaceAll("-$", "")
-    
+
     // several name elements that only make sense together and represent one element
     mutNormString = mutNormString.replaceAll("^von *der ", "vonder ")
     mutNormString = mutNormString.replaceAll(" von *der ", " vonder ")
@@ -77,19 +83,19 @@ object TextNormalizer {
     mutNormString = mutNormString.replaceAll(" an *der ", " ander ")
     mutNormString = mutNormString.replaceAll(" an *der$", " ander")
 
-    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")  
+    mutNormString = mutNormString.replaceAll("^de *la ", "dela ")
     mutNormString = mutNormString.replaceAll(" de *la ", " dela ")
     mutNormString = mutNormString.replaceAll(" de *la$", " dela")
 
-    mutNormString = mutNormString.replaceAll("^de *los ", "delos ")  
+    mutNormString = mutNormString.replaceAll("^de *los ", "delos ")
     mutNormString = mutNormString.replaceAll(" de *los ", " delos ")
     mutNormString = mutNormString.replaceAll(" de *los$", " delos")
 
-    mutNormString = mutNormString.replaceAll("^ad-din ", "addin ")  
+    mutNormString = mutNormString.replaceAll("^ad-din ", "addin ")
     mutNormString = mutNormString.replaceAll(" ad-din ", " addin ")
     mutNormString = mutNormString.replaceAll(" ad-din$", " addin")
 
-    mutNormString = mutNormString.replaceAll("^al-din ", "aldin ")  
+    mutNormString = mutNormString.replaceAll("^al-din ", "aldin ")
     mutNormString = mutNormString.replaceAll(" al-din ", " aldin ")
     mutNormString = mutNormString.replaceAll(" al-din$", " aldin")
 
@@ -125,7 +131,8 @@ object TextNormalizer {
     var mutNormString = normalize(text)
 
     // Compact common legal forms
-    mutNormString = mutNormString.replaceAll("\\bgmbh *and *co *kg\\b", "gmbh_and_co_kg")
+    mutNormString =
+      mutNormString.replaceAll("\\bgmbh *and *co *kg\\b", "gmbh_and_co_kg")
     mutNormString =
       mutNormString.replaceAll("\\bgmbh *and *co *ohg\\b", "gmbh_and_co_ohg")
     mutNormString =
@@ -133,26 +140,37 @@ object TextNormalizer {
 
     mutNormString = mutNormString.replaceAll("\\bohg *mbh\\b", "ohg_mbh")
 
-    mutNormString = mutNormString.replaceAll("\\bag *and *co *ohg\\b", "ag_and_co_ohg")
-    mutNormString = mutNormString.replaceAll("\\bag *and *co *kgaa\\b", "ag_and_co_kgaa")
-    mutNormString = mutNormString.replaceAll("\\bag *and *co *kg\\b", "ag_and_co_kg")
-
     mutNormString =
-      mutNormString.replaceAll("\\bstiftung *and *co *kgaa\\b", "stiftung_and_co_gkaa")
+      mutNormString.replaceAll("\\bag *and *co *ohg\\b", "ag_and_co_ohg")
+    mutNormString =
+      mutNormString.replaceAll("\\bag *and *co *kgaa\\b", "ag_and_co_kgaa")
+    mutNormString =
+      mutNormString.replaceAll("\\bag *and *co *kg\\b", "ag_and_co_kg")
+
+    mutNormString = mutNormString.replaceAll(
+      "\\bstiftung *and *co *kgaa\\b",
+      "stiftung_and_co_gkaa"
+    )
 
     mutNormString = mutNormString.replace("\\bco-operative\\b", "cooperative")
-    mutNormString =
-      mutNormString.replaceAll("\\bsociete *cooperative\\b", "societe_cooperative")
-    mutNormString =
-      mutNormString.replaceAll("\\bsocieta *cooperativa\\b", "societa_cooperativa")
+    mutNormString = mutNormString.replaceAll(
+      "\\bsociete *cooperative\\b",
+      "societe_cooperative"
+    )
+    mutNormString = mutNormString.replaceAll(
+      "\\bsocieta *cooperativa\\b",
+      "societa_cooperativa"
+    )
 
     mutNormString = mutNormString.replaceAll("\\bcompany *limited\\b", "lc")
     mutNormString = mutNormString.replaceAll("\\bcompany *ltd\\b", "lc")
     mutNormString = mutNormString.replaceAll("\\blimited *company\\b", "lc")
-    mutNormString = mutNormString.replaceAll("\\bpublic *limited *company\\b", "plc")
+    mutNormString =
+      mutNormString.replaceAll("\\bpublic *limited *company\\b", "plc")
     mutNormString = mutNormString.replaceAll("\\bcompany *corp\\b", "corp")
     mutNormString = mutNormString.replaceAll("\\bunlimited *company\\b", "uc")
-    mutNormString = mutNormString.replaceAll("\\bincorporated *company\\b", "inc")
+    mutNormString =
+      mutNormString.replaceAll("\\bincorporated *company\\b", "inc")
 
     mutNormString = mutNormString.replaceAll("\\b( *a o)\\b", "ao")
 
@@ -201,4 +219,26 @@ object TextNormalizer {
 
     mutNormNameElement
   }
+
+  /** This method return true if all acharacters in a given text
+    * matches to the same Unicode block. Therefore it seams that
+    * all characters are of the same alphabet. Only letters in a 
+    * string are checked. Return true if the string is empty or
+    * no letters are dedected.
+    *
+    * @param nameElement
+    *   String representing the text to check.
+    * @return
+    *   Return Boolean.
+    */
+  def isSingleScript(input: String): Boolean = {
+    val letters = input.filter(_.isLetter)
+
+    if (letters.isEmpty) return true
+
+    val firstBlock = Character.UnicodeBlock.of(letters.head)
+
+    letters.forall(char => Character.UnicodeBlock.of(char) == firstBlock)
+  }
+
 }

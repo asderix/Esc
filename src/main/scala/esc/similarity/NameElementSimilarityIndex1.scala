@@ -967,6 +967,7 @@ object NameElementSimilarityIndex1 {
     "diamila.zemil" -> 0.99,
     "dian.diana" -> 0.99,
     "diane.jane" -> 0.1,
+    "dick.richard" -> 0.97,
     "dick.richart" -> 0.97,
     "diedrich.dietrich" -> 0.99,
     "dien.liem" -> 0.1,

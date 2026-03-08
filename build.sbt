@@ -36,4 +36,4 @@ assembly / assemblyMergeStrategy := {
 
 Test / fork := true
 
-assembly / assemblyJarName := "EscEntitySimilarityChecker_3.2.0.jar"
+assembly / assemblyJarName := "EscEntitySimilarityChecker_3.3.0.jar"

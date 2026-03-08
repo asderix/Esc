@@ -15,6 +15,44 @@ import esc.ai._
   */
 class NormalizationTest extends AnyFunSuite {
   TestEnv.init()
+  // -- Text -- //
+  val textNormalizer = TextNormalizer
+  test("TextNormalization.Characters.1") {
+    assert(
+      textNormalizer.isSingleScript("Latin text")        
+    )
+  }
+  test("TextNormalization.Characters.2") {
+    assert(
+      textNormalizer.isSingleScript("Кириллический текст")        
+    )
+  }
+  test("TextNormalization.Characters.3") {
+    assert(
+      textNormalizer.isSingleScript("KОМРАС") == false
+    )
+  }
+  test("TextNormalization.Characters.4") {
+    assert(
+      textNormalizer.isSingleScript("ΜΑRCUS") == false
+    )
+  }
+  test("TextNormalization.Whitespaces.1") {
+    assert(
+      textNormalizer.normalize("Firstname\u00A0Lastname") == "firstname lastname"
+    )
+  }
+  test("TextNormalization.Whitespaces.2") {
+    assert(
+      textNormalizer.normalize("Firstname\u202FLastname") == "firstname lastname"
+    )
+  }
+  test("TextNormalization.Whitespaces.3") {
+    assert(
+      textNormalizer.normalize("Firstname Lastname") == "firstname lastname"
+    )
+  }
+
   // -- Names -- //
   val normalizer = new NameNormalizer
   test("Normalization.PersonName.1") {
@@ -105,9 +143,9 @@ class NormalizationTest extends AnyFunSuite {
     )
   }
   test("Normalization.BestGuessTransliteration.5") {
-    val n = Transliterator.transToLatinBestGuess("山田 太郎")
+    val n = TextNormalizer.normalize(Transliterator.transToLatinBestGuess("山田 太郎"))
     assert(
-       n == "Yamada Taro" || n == "Yamada Tarou"
+       n == "yamada taro" || n == "yamada tarou"
     )
   }
   test("Normalization.BestGuessTransliteration.6") {
