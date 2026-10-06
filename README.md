@@ -31,7 +31,7 @@ organizations.
 Thanks to a LLM integration it's support good transliteration even for scripts like Chinese.
 
 ## Status
-The library is available in a stable version.
+The library was available in a stable version. As of October 2026, after 8 years, this library will no longer be actively developed.
 
 ## Project website
 The official project website is here: https://esc.asderix.com/ - Roadmap and release notes are on GitHub-Wiki.
